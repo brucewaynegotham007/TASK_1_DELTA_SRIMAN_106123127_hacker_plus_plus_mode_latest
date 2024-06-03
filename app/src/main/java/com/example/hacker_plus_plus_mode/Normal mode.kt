@@ -862,7 +862,35 @@ fun eachGame(
                             contentColor = Color.Black
                         )
                     ) {
-                        Text(text = winner.value, fontSize = 18.sp)
+                        var hello : String = ""
+                        if (winner.value == "0") {
+                            hello = firstBoxVal.value
+                        }
+                        else if(winner.value == "1") {
+                            hello = secondBoxVal.value
+                        }
+                        else if(winner.value == "2") {
+                            hello = thirdBoxVal.value
+                        }
+                        else if(winner.value == "3") {
+                            hello = fourthBoxVal.value
+                        }
+                        else if(winner.value == "4") {
+                            hello = fifthBoxVal.value
+                        }
+                        else if(winner.value == "5") {
+                            hello = sixthBoxVal.value
+                        }
+                        else if(winner.value == "6") {
+                            hello = seventhBoxVal.value
+                        }
+                        else if(winner.value == "7") {
+                            hello = eighthBoxVal.value
+                        }
+                        else {
+                            hello = "NONE"
+                        }
+                        Text(text = hello, fontSize = 18.sp)
                     }
                     Spacer(modifier = Modifier.padding(top = 40.dp))
                     Image(
@@ -904,7 +932,7 @@ fun eachGame(
                             saveText(
                                 sharedPreferences,
                                 track.value.toString(),
-                                winningValue.value.toString() + 'r'
+                                winningValue.value.toString() + winner.value
                             )
 
                             managingPersistentDisplay(sharedPreferences)

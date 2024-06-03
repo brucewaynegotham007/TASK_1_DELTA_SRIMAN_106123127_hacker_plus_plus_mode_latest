@@ -1157,143 +1157,25 @@ fun MyTextField() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun rulesPage(navController: NavController) {
-    val modeSelector = remember { mutableStateOf("Normal") }
-
-    AlertDialog(
-        onDismissRequest = { /*TODO*/ },
-        modifier = Modifier.size(width = 275.dp, height = 450.dp)
+    Column(modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
     ) {
-        Card(
-            modifier = Modifier
-                .fillMaxSize()
-                .scale(1.3f),
-            colors = CardDefaults.cardColors(containerColor = Color.Yellow),
-        ) {
-            Spacer(modifier = Modifier.padding(20.dp))
-            Card(
-                onClick = { /*TODO*/ },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .size(200.dp, 60.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = Color.Red,
-                    contentColor = Color.Black
-                )
+        Card(modifier = Modifier.size(400.dp,800.dp)) {
+            Column(modifier = Modifier.fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Column(modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Text(text = "Choose number of Games per Match :", fontSize = 18.sp , textAlign = TextAlign.Center)
-                }
-            }
-            Spacer(modifier = Modifier.padding(7.dp))
-            Column(modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                noOfGamesInCurrentMatch()
-            }
-            Spacer(modifier = Modifier.padding(top = 30.dp))
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Row() {
-                    Card(
-                        onClick = { /*TODO*/ },
-                        modifier = Modifier
-                            .padding(start = 0.dp)
-                            .size(140.dp, 50.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = Color.Red,
-                            contentColor = Color.Black
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-
-                        ) {
-                            Text(
-                                text = "Choose Game Mode : ",
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                    Spacer(modifier = Modifier.padding(5.dp))
-                    Card(
-                        modifier = Modifier.size(90.dp, 45.dp)
-                    ) {
-                        Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center
-                        ) {
-                            Text(
-                                text = modeSelector.value,
-                                fontSize = 18.sp,
-                                textAlign = TextAlign.Center
-                            )
-                        }
-                    }
-                }
-                Spacer(modifier = Modifier.padding(2.dp))
-
-                val selectedNormal = remember { mutableStateOf(true) }
-                val selectedTimed = remember { mutableStateOf(false) }
-
-                Column() {
-                    Row() {
-                        RadioButton(selected = selectedNormal.value,
-                            onClick = {
-                                selectedNormal.value = true
-                                selectedTimed.value = false
-                                modeSelector.value = "Normal"
-                            }
-                        )
-                        Text(
-                            text = "NORMAL MODE",
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
-                    }
-                    Row() {
-                        RadioButton(selected = selectedTimed.value,
-                            onClick = {
-                                selectedTimed.value = true
-                                selectedNormal.value = false
-                                modeSelector.value = "Timed"
-                            }
-                        )
-                        Text(
-                            text = "TIMED MODE",
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(top = 10.dp)
-                        )
-                    }
-                }
-                Spacer(modifier = Modifier.padding(10.dp))
-                Button(
-                    onClick = {
-                        if(modeSelector.value == "Normal") {
-                            navController.navigate("secondscreen")
-                        }
-                        else {
-                            navController.navigate("secondPageForTimedMode")
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0, 190, 255),
-                        contentColor = Color.White
-                    ),
-                    modifier = Modifier.size(width = 120.dp, height = 45.dp)
-                ) {
-                    Text(text = "PLAY", fontSize = 24.sp, textAlign = TextAlign.Center)
-                }
+                Text("GAME LOGIC : \n\n" +
+                        "1st Turn of each player: Players can choose any tile on the grid on this turn only. Clicking a tile assigns your colour to it and awards you 3 points on that tile.\n" + "\n" +
+                        "Subsequent Turns: After the first turn, players can only click on tiles that already have their own colour. Clicking a tile with your colour adds 1 point to that tile.The background colour indicates the next player.\n" + "\n" +
+                        "Conquest and Expansion: When a tile with your colour reaches 4 points, it triggers an expansion:\n" + "\n" +
+                        "The colour completely disappears from the original tile.\n" + "\n" +
+                        "Your colour spreads to the four surrounding squares in a plus shape (up, down, left, right).\n" + "\n" +
+                        "Each of the four surrounding squares gains 1 point with your colour.\n" + "\n" +
+                        "If any of the four has your opponent’s colour, you conquer the opponent's points on that tile while adding a point to it, completely erasing theirs.\n" + "\n" +
+                        "The expansion is retriggered if the neighbouring tile as well reaches 4 points this way.\n" + "\n" +
+                        "Players take turns clicking on tiles and the objective is to eliminate your opponent's colour entirely from the screen.")
             }
         }
     }
@@ -1709,7 +1591,36 @@ fun trackingResult(eachPlayerVal: MutableState<MutableList<Int>>) {
         if(hasSomeoneWonTheMatch.value[y]) {
             thisPlayerWonTheMatch.value = true
             whoWonTheMatch.value = y.toString()
+            var hello : String = ""
+            if (whoWonTheMatch.value == "0") {
+                hello = firstBoxVal.value
+            }
+            else if(whoWonTheMatch.value == "1") {
+                hello = secondBoxVal.value
+            }
+            else if(whoWonTheMatch.value == "2") {
+                hello = thirdBoxVal.value
+            }
+            else if(whoWonTheMatch.value == "3") {
+                hello = fourthBoxVal.value
+            }
+            else if(whoWonTheMatch.value == "4") {
+                hello = fifthBoxVal.value
+            }
+            else if(whoWonTheMatch.value == "5") {
+                hello = sixthBoxVal.value
+            }
+            else if(whoWonTheMatch.value == "6") {
+                hello = seventhBoxVal.value
+            }
+            else if(whoWonTheMatch.value == "7") {
+                hello = eighthBoxVal.value
+            }
+            else {
+                hello = "NONE"
+            }
             valueOfWinnerOfMatch.value = eachPlayerVal.value[y]
+            whoWonTheMatch.value = hello
             break
         }
         else {
@@ -1753,7 +1664,7 @@ fun result(navController: NavController,
                             contentColor = Color.Black
                         )
                     ) {
-                        Text(text = "playerWon" , fontSize = 18.sp)
+                        Text(text = whoWonTheMatch.value , fontSize = 18.sp)
                     }
                     Column(modifier = Modifier.size(150.dp,150.dp)) {
                         Image(
@@ -1816,10 +1727,32 @@ fun managingPersistentDisplay(sharedPreferences: SharedPreferences) {
         var winner: Char = temp.last()
         temp = temp.dropLast(1)
         savedItems.add(temp)
-        if (winner == 'r') {
+        if (winner == '0') {
             savedPlayers.add(firstBoxVal.value)
-        } else {
+        }
+        else if(winner == '1') {
             savedPlayers.add(secondBoxVal.value)
+        }
+        else if(winner == '2') {
+            savedPlayers.add(thirdBoxVal.value)
+        }
+        else if(winner == '3') {
+            savedPlayers.add(fourthBoxVal.value)
+        }
+        else if(winner == '4') {
+            savedPlayers.add(fifthBoxVal.value)
+        }
+        else if(winner == '5') {
+            savedPlayers.add(sixthBoxVal.value)
+        }
+        else if(winner == '6') {
+            savedPlayers.add(seventhBoxVal.value)
+        }
+        else if(winner == '7') {
+            savedPlayers.add(eighthBoxVal.value)
+        }
+        else {
+            savedPlayers.add("NONE")
         }
     }
 }
