@@ -1134,145 +1134,34 @@ fun checkConditionForSinglePlayer(i:Int ,
     val rowIndex = i
     val columnIndex = j
 
-    if(numberGrid.value[i][j]== 4) {
-        numberGrid.value[i][j]=0
-        booleanGrid.value[i][j]=null
-        if (rowIndex == numRows-1 && columnIndex == numColumnsPerRow-1) {
-            numberGrid.value[i-1][j]++
-            booleanGrid.value[i-1][j] = isScreenBlue.value
-            if(numberGrid.value[i-1][j]==4) {
-                checkConditionForSinglePlayer(i-1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j-1]++
-            booleanGrid.value[i][j-1] = isScreenBlue.value
-            if(numberGrid.value[i][j-1]==4) {
-                checkConditionForSinglePlayer(i,j-1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-        }
-        else if (rowIndex == 0 && columnIndex == 0) {
-            numberGrid.value[i+1][j]++
-            booleanGrid.value[i+1][j] = isScreenBlue.value
-            if(numberGrid.value[i+1][j]==4) {
-                checkConditionForSinglePlayer(i+1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j+1]++
-            booleanGrid.value[i][j+1] = isScreenBlue.value
-            if(numberGrid.value[i][j+1]==4) {
-                checkConditionForSinglePlayer(i,j+1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
+    if (numberGrid.value[i][j] >= 4) {
+        numberGrid.value[i][j] = 0
+        booleanGrid.value[i][j] = null
+
+        // Define directions for neighbors (up, down, left, right)
+        val directions = listOf(
+            Pair(-1, 0), // Up
+            Pair(1, 0),  // Down
+            Pair(0, -1), // Left
+            Pair(0, 1)   // Right
+        )
+
+        // Update neighbors
+        for ((dx, dy) in directions) {
+            val newX = i + dx
+            val newY = j + dy
+            if (newX in numberGrid.value.indices && newY in numberGrid.value[newX].indices) {
+                numberGrid.value[newX][newY]++
+                booleanGrid.value[newX][newY] = isScreenBlue.value
             }
         }
-        else if (rowIndex == numRows-1 && columnIndex == 0) {
-            numberGrid.value[i-1][j]++
-            booleanGrid.value[i-1][j] = isScreenBlue.value
-            if(numberGrid.value[i-1][j]==4) {
-                checkConditionForSinglePlayer(i-1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j+1]++
-            booleanGrid.value[i][j+1] = isScreenBlue.value
-            if(numberGrid.value[i][j+1]==4) {
-                checkConditionForSinglePlayer(i,j+1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-        }
-        else if (rowIndex == 0 && columnIndex == numColumnsPerRow-1) {
-            numberGrid.value[i][j-1]++
-            booleanGrid.value[i][j-1] = isScreenBlue.value
-            if(numberGrid.value[i][j-1]==4) {
-                checkConditionForSinglePlayer(i,j-1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i+1][j]++
-            booleanGrid.value[i+1][j] = isScreenBlue.value
-            if(numberGrid.value[i+1][j]==4) {
-                checkConditionForSinglePlayer(i+1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-        }
-        else if (rowIndex == numRows-1) {
-            numberGrid.value[i-1][j]++
-            booleanGrid.value[i-1][j] = isScreenBlue.value
-            if(numberGrid.value[i-1][j]==4) {
-                checkConditionForSinglePlayer(i-1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j-1]++
-            booleanGrid.value[i][j-1] = isScreenBlue.value
-            if(numberGrid.value[i][j-1]==4) {
-                checkConditionForSinglePlayer(i,j-1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j+1]++
-            booleanGrid.value[i][j+1] = isScreenBlue.value
-            if(numberGrid.value[i][j+1]==4) {
-                checkConditionForSinglePlayer(i,j+1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-        }
-        else if (columnIndex == numColumnsPerRow-1) {
-            numberGrid.value[i][j-1]++
-            booleanGrid.value[i][j-1] = isScreenBlue.value
-            if(numberGrid.value[i][j-1]==4) {
-                checkConditionForSinglePlayer(i,j-1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i-1][j]++
-            booleanGrid.value[i-1][j] = isScreenBlue.value
-            if(numberGrid.value[i-1][j]==4) {
-                checkConditionForSinglePlayer(i-1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i+1][j]++
-            booleanGrid.value[i+1][j] = isScreenBlue.value
-            if(numberGrid.value[i+1][j]==4) {
-                checkConditionForSinglePlayer(i+1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-        }
-        else if (rowIndex == 0) {
-            numberGrid.value[i][j+1]++
-            booleanGrid.value[i][j+1] = isScreenBlue.value
-            if(numberGrid.value[i][j+1]==4) {
-                checkConditionForSinglePlayer(i,j+1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j-1]++
-            booleanGrid.value[i][j-1] = isScreenBlue.value
-            if(numberGrid.value[i][j-1]==4) {
-                checkConditionForSinglePlayer(i,j-1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i+1][j]++
-            booleanGrid.value[i+1][j] = isScreenBlue.value
-            if(numberGrid.value[i+1][j]==4) {
-                checkConditionForSinglePlayer(i+1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-        }
-        else if (columnIndex == 0) {
-            numberGrid.value[i-1][j]++
-            booleanGrid.value[i-1][j] = isScreenBlue.value
-            if(numberGrid.value[i-1][j]==4) {
-                checkConditionForSinglePlayer(i-1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i+1][j]++
-            booleanGrid.value[i+1][j] = isScreenBlue.value
-            if(numberGrid.value[i+1][j]==4) {
-                checkConditionForSinglePlayer(i+1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j+1]++
-            booleanGrid.value[i][j+1] = isScreenBlue.value
-            if(numberGrid.value[i][j+1]==4) {
-                checkConditionForSinglePlayer(i,j+1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-        }
-        else {
-            numberGrid.value[i-1][j]++
-            booleanGrid.value[i-1][j] = isScreenBlue.value
-            if(numberGrid.value[i-1][j]==4) {
-                checkConditionForSinglePlayer(i-1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i+1][j]++
-            booleanGrid.value[i+1][j] = isScreenBlue.value
-            if(numberGrid.value[i+1][j]==4) {
-                checkConditionForSinglePlayer(i+1,j,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j-1]++
-            booleanGrid.value[i][j-1] = isScreenBlue.value
-            if(numberGrid.value[i][j-1]==4) {
-                checkConditionForSinglePlayer(i,j-1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
-            }
-            numberGrid.value[i][j+1]++
-            booleanGrid.value[i][j+1] = isScreenBlue.value
-            if(numberGrid.value[i][j+1]==4) {
-                checkConditionForSinglePlayer(i,j+1,num,isScreenBlue,numberGrid,booleanGrid,redVal,blueVal,blueWinningCondition,redWinningCondition)
+
+        // Recursively check neighbors
+        for ((dx, dy) in directions) {
+            val newX = i + dx
+            val newY = j + dy
+            if (newX in numberGrid.value.indices && newY in numberGrid.value[newX].indices && numberGrid.value[newX][newY] >= 4) {
+                checkConditionForSinglePlayer(newX, newY, num , isScreenBlue, numberGrid, booleanGrid, redVal, blueVal, blueWinningCondition , redWinningCondition)
             }
         }
     }
@@ -1309,8 +1198,7 @@ fun displayContentForSinglePlayer(i:Int ,
                    blueVal : MutableIntState,
                    navController: NavController,
                    blueWinningCondition: MutableState<Boolean>,
-                   redWinningCondition: MutableState<Boolean>,
-                                  countOther: MutableState<Int>) {
+                   redWinningCondition: MutableState<Boolean>) {
 
             val hearSound = remember { mutableStateOf(false) }
             if(hearSound.value) {
@@ -1327,15 +1215,22 @@ fun displayContentForSinglePlayer(i:Int ,
                             hearSound.value = true
                         } else {
                             hearSound.value = false
-                            numberGrid.value[i][j]++
-                            booleanGrid.value[i][j]=false
+
+                            val newNumberGrid = numberGrid.value.map { it.toMutableList() }.toMutableList()
+                            newNumberGrid[i][j]++
+                            numberGrid.value = newNumberGrid
+
+                            val newBooleanGrid = booleanGrid.value.map { it.toMutableList() }.toMutableList()
+                            newBooleanGrid[i][j] = false
+                            booleanGrid.value = newBooleanGrid
+
                             checkConditionForSinglePlayer(
                                 i,j,num,isScreenBlue, numberGrid, booleanGrid, redVal, blueVal, blueWinningCondition, redWinningCondition
                             )
                             isScreenBlue.value = !isScreenBlue.value
                             updatingBoxesOwned(booleanGrid)
                             var sizeOfBlue = boxesOwnedByBlue.value.size
-                            Log.d("sizeofblue" , sizeOfBlue.toString())
+
                             if(sizeOfBlue==0) {
                                 //do nothing
                             }
@@ -1343,8 +1238,15 @@ fun displayContentForSinglePlayer(i:Int ,
                                 var index = Random.nextInt(0,sizeOfBlue)
                                 var row = boxesOwnedByBlue.value[index].first
                                 var column = boxesOwnedByBlue.value[index].second
-                                numberGrid.value[row][column]++
-                                booleanGrid.value[row][column] = true
+
+                                val newNumberGrid = numberGrid.value.map { it.toMutableList() }.toMutableList()
+                                newNumberGrid[row][column]++
+                                numberGrid.value = newNumberGrid
+
+                                val newBooleanGrid = booleanGrid.value.map { it.toMutableList() }.toMutableList()
+                                newBooleanGrid[row][column] = true
+                                booleanGrid.value = newBooleanGrid
+
                                 checkConditionForSinglePlayer(
                                     row,
                                     column,
@@ -1357,6 +1259,8 @@ fun displayContentForSinglePlayer(i:Int ,
                                     blueWinningCondition,
                                     redWinningCondition
                                 )
+
+                                updatingBoxesOwned(booleanGrid)
                                 isScreenBlue.value = !isScreenBlue.value
                             }
 
@@ -1390,18 +1294,19 @@ fun displayContentForSinglePlayer(i:Int ,
 }
 
 @Composable
-fun generateButtonGridForSinglePlayer(numRows: Int,
-                       numColumnsPerRow: Int,
-                       isScreenBlue : MutableState<Boolean>,
-                       numberGrid : MutableState<MutableList<MutableList<Int>>>,
-                       booleanGrid : MutableState<MutableList<MutableList<Boolean?>>>,
-                       redVal: MutableIntState,
-                       blueVal : MutableIntState,
-                       navController: NavController,
-                       blueWinningCondition: MutableState<Boolean>,
-                       redWinningCondition: MutableState<Boolean>,
-                       count : MutableState<Int>,
-                        countOther : MutableState<Int>
+fun generateButtonGridForSinglePlayer(
+    numRows: Int,
+    numColumnsPerRow: Int,
+    isScreenBlue: MutableState<Boolean>,
+    numberGrid: MutableState<MutableList<MutableList<Int>>>,
+    booleanGrid: MutableState<MutableList<MutableList<Boolean?>>>,
+    redVal: MutableIntState,
+    blueVal: MutableIntState,
+    navController: NavController,
+    blueWinningCondition: MutableState<Boolean>,
+    redWinningCondition: MutableState<Boolean>,
+    count: MutableState<Int>,
+    countOther: MutableState<Int>
 ): List<List<@Composable () -> Unit>> {
     val buttonGrid = mutableListOf<MutableList<@Composable () -> Unit>>()
 
@@ -1414,7 +1319,7 @@ fun generateButtonGridForSinglePlayer(numRows: Int,
                         .size(
                             width = (65 - (numColumnsPerRow - 3) * 5).dp,
                             height = (65 - (numRows - 3) * 5).dp
-                        ) // 8=40 , 5=55 , 6=50 , 7=45 , 4=60 , 3=65
+                        )
                         .background(
                             color = Color(245, 229, 206),
                             shape = RoundedCornerShape(12.dp)
@@ -1424,16 +1329,30 @@ fun generateButtonGridForSinglePlayer(numRows: Int,
                             if (count.value < 1) {
                                 val rowIndex = i
                                 val columnIndex = j
-                                numberGrid.value[i][j] += 3
-                                booleanGrid.value[i][j] = false
-                                boxesOwnedByRed.value.add(Pair(i, j))
+
+                                // Create new lists to trigger recomposition
+                                val newNumberGrid = numberGrid.value.map { it.toMutableList() }.toMutableList()
+                                newNumberGrid[rowIndex][columnIndex] += 3
+                                numberGrid.value = newNumberGrid
+
+                                val newBooleanGrid = booleanGrid.value.map { it.toMutableList() }.toMutableList()
+                                newBooleanGrid[rowIndex][columnIndex] = false
+                                booleanGrid.value = newBooleanGrid
+
+                                boxesOwnedByRed.value.add(Pair(rowIndex, columnIndex))
                                 isScreenBlue.value = !isScreenBlue.value
-                                val row = Random.nextInt(0, numRows)
-                                val column = Random.nextInt(0, numColumnsPerRow)
-                                numberGrid.value[row][column] += 3
-                                booleanGrid.value[row][column] = true
+
+                                val randomRow = Random.nextInt(0, numRows)
+                                val randomColumn = Random.nextInt(0, numColumnsPerRow)
+
+                                newNumberGrid[randomRow][randomColumn] += 3
+                                numberGrid.value = newNumberGrid
+
+                                newBooleanGrid[randomRow][randomColumn] = true
+                                booleanGrid.value = newBooleanGrid
+
+                                boxesOwnedByBlue.value.add(Pair(randomRow, randomColumn))
                                 isScreenBlue.value = !isScreenBlue.value
-                                boxesOwnedByBlue.value.add(Pair(row, column))
                             }
                             count.value++
 
@@ -1441,10 +1360,8 @@ fun generateButtonGridForSinglePlayer(numRows: Int,
                             blueVal.value = 3
                         }
                 ) {
-                    val rowIndex = i
-                    val columnIndex = j
 
-                    if (numberGrid.value[i][j] > 0) {
+                    if (numberGrid.value[i][j] != 0) {
                         displayContentForSinglePlayer(
                             i = i,
                             j = j,
@@ -1456,8 +1373,7 @@ fun generateButtonGridForSinglePlayer(numRows: Int,
                             blueVal = blueVal,
                             navController = navController,
                             blueWinningCondition = blueWinningCondition,
-                            redWinningCondition = redWinningCondition,
-                            countOther
+                            redWinningCondition = redWinningCondition
                         )
                     }
 
@@ -1470,6 +1386,7 @@ fun generateButtonGridForSinglePlayer(numRows: Int,
 
     return buttonGrid.toList()
 }
+
 
 val hasRedWonTheMatch : MutableState<Boolean> = mutableStateOf(false)
 val hasBlueWonTheMatch : MutableState<Boolean> = mutableStateOf(false)
@@ -1510,38 +1427,22 @@ fun singlePlayerMode(navController: NavController) {
     val buttonGrid = generateButtonGridForSinglePlayer(numRows = numRows, numColumnsPerRow = numColumnsPerRow ,
         isScreenBlue , numberGrid , booleanGrid , redVal, blueVal , navController,blueWinningCondition, redWinningCondition , count , countOther)
 
-    if(modeSelector.value == "Normal"){
-        if (isScreenBlue.value) {
-            AndroidView(
-                modifier = Modifier,
-                factory = { context ->
-                    ImageView(context).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                        setImageResource(R.drawable.solid_color_image_blue)
-                        scaleType = ImageView.ScaleType.CENTER_CROP
-                    }
-                },
-                update = { /* No update needed */ }
-            )
-        } else {
-            AndroidView(
-                modifier = Modifier,
-                factory = { context ->
-                    ImageView(context).apply {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                        setImageResource(R.drawable.solid_color_image_red)
-                        scaleType = ImageView.ScaleType.CENTER_CROP
-                    }
-                },
-                update = { /* No update needed */ }
-            )
-        }
+    if(theme.value == "Normal"){
+        AndroidView(
+            modifier = Modifier,
+            factory = { context ->
+                ImageView(context).apply {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    setImageResource(R.drawable.solid_color_image_red)
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                }
+            },
+            update = { /* No update needed */ }
+        )
+
     }
     else if(theme.value=="Space") {
         AndroidView(
