@@ -2173,29 +2173,6 @@ fun playerDetails() {
                     }
                     else if(num.value==1) {
                         BasicTextField(
-                            value = firstBoxVal.value,
-                            onValueChange = {
-                                if (it.length <= 8) {
-                                    firstBoxVal.value = it
-                                }
-                            },
-                            textStyle = TextStyle(
-                                color = Color(red = 151, green = 151, blue = 176),
-                                textAlign = TextAlign.Left,
-                                letterSpacing = 10.sp,
-                                fontFamily = FontFamily.Monospace
-                            ),
-                            modifier = Modifier
-                                .background(
-                                    color = Color(red = 5, green = 5, blue = 129),
-                                    shape = RoundedCornerShape(8.dp)
-                                )
-                                .size(150.dp, 15.dp)
-                                .offset(-3.dp, 18.dp)
-                        )
-                    }
-                    else if(num.value==2) {
-                        BasicTextField(
                             value = secondBoxVal.value,
                             onValueChange = {
                                 if (it.length <= 8) {
@@ -2217,12 +2194,35 @@ fun playerDetails() {
                                 .offset(-3.dp, 18.dp)
                         )
                     }
-                    else if(num.value==3) {
+                    else if(num.value==2) {
                         BasicTextField(
                             value = thirdBoxVal.value,
                             onValueChange = {
                                 if (it.length <= 8) {
-                                    firstBoxVal.value = it
+                                    thirdBoxVal.value = it
+                                }
+                            },
+                            textStyle = TextStyle(
+                                color = Color(red = 151, green = 151, blue = 176),
+                                textAlign = TextAlign.Left,
+                                letterSpacing = 10.sp,
+                                fontFamily = FontFamily.Monospace
+                            ),
+                            modifier = Modifier
+                                .background(
+                                    color = Color(red = 5, green = 5, blue = 129),
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .size(150.dp, 15.dp)
+                                .offset(-3.dp, 18.dp)
+                        )
+                    }
+                    else if(num.value==3) {
+                        BasicTextField(
+                            value = fourthBoxVal.value,
+                            onValueChange = {
+                                if (it.length <= 8) {
+                                    fourthBoxVal.value = it
                                 }
                             },
                             textStyle = TextStyle(
@@ -2242,10 +2242,10 @@ fun playerDetails() {
                     }
                     else if(num.value==4) {
                         BasicTextField(
-                            value = fourthBoxVal.value,
+                            value = fifthBoxVal.value,
                             onValueChange = {
                                 if (it.length <= 8) {
-                                    firstBoxVal.value = it
+                                    fifthBoxVal.value = it
                                 }
                             },
                             textStyle = TextStyle(
@@ -2265,10 +2265,10 @@ fun playerDetails() {
                     }
                     else if(num.value==5) {
                         BasicTextField(
-                            value = fifthBoxVal.value,
+                            value = sixthBoxVal.value,
                             onValueChange = {
                                 if (it.length <= 8) {
-                                    firstBoxVal.value = it
+                                    sixthBoxVal.value = it
                                 }
                             },
                             textStyle = TextStyle(
@@ -2288,10 +2288,10 @@ fun playerDetails() {
                     }
                     else if(num.value==6) {
                         BasicTextField(
-                            value = sixthBoxVal.value,
+                            value = seventhBoxVal.value,
                             onValueChange = {
                                 if (it.length <= 8) {
-                                    firstBoxVal.value = it
+                                    seventhBoxVal.value = it
                                 }
                             },
                             textStyle = TextStyle(
@@ -2311,10 +2311,10 @@ fun playerDetails() {
                     }
                     else if(num.value==7) {
                         BasicTextField(
-                            value = seventhBoxVal.value,
+                            value = eighthBoxVal.value,
                             onValueChange = {
                                 if (it.length <= 8) {
-                                    firstBoxVal.value = it
+                                    eighthBoxVal.value = it
                                 }
                             },
                             textStyle = TextStyle(

@@ -71,6 +71,10 @@ import kotlin.random.Random
 @Composable
 fun secondPage(navController: NavController) {
 
+    for(i in 0 until noOfPlayers.value) {
+        eachPlayerWhoLostPreviousGame.value[i] = false
+    }
+
     val showGridSize = remember { mutableStateOf(false) }
 
     AndroidView(
@@ -633,7 +637,7 @@ fun thirdPage(navController: NavController) {
                 }
         )
     }
-    if(modeSelector.value == "Space" || modeSelector.value == "Ocean") {
+    if(modeSelector.value == "Space") {
         Column(modifier = Modifier.padding(top = 20.dp, start = 20.dp)) {
             Card(
                 modifier = Modifier
@@ -665,6 +669,42 @@ fun thirdPage(navController: NavController) {
                 }
             }
         }
+    }
+    else if(modeSelector.value == "Ocean") {
+        Column(modifier = Modifier.padding(top = 20.dp, start = 20.dp)) {
+            Card(
+                modifier = Modifier
+                    .size(250.dp, 60.dp)
+                    .offset(0.dp, 0.dp)
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalArrangement = Arrangement.Center,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            text = "Whose turn ?",
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.padding(horizontal = 10.dp))
+                        Card(
+                            colors = CardDefaults.cardColors(colour),
+                            modifier = Modifier.size(50.dp, 45.dp)
+                        ) {
+                            //no content
+                        }
+                    }
+                }
+            }
+        }
+    }
+    else {
+        //do nothing
     }
     Column(
         horizontalAlignment = Alignment.End
@@ -912,6 +952,7 @@ fun eachGame(
                         onClick = {
 
                             for(i in 0 until noOfPlayers.value) {
+                                eachPlayerWhoLostPreviousGame.value[i] = eachPlayerLosingCondition.value[i]
                                 eachPlayerLosingCondition.value[i] = false
                                 eachPlayerWinningCondition.value[i] = false
                                 eachPlayerVal.value[i] = 0
