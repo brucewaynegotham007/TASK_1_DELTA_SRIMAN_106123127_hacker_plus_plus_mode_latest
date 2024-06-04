@@ -1205,7 +1205,30 @@ fun displayContentForSinglePlayer(i:Int ,
                 soundEffectsForInvalidMove()
             }
 
-            Column(modifier = Modifier.fillMaxSize(),
+    val enterTransition = remember {
+        fadeIn(animationSpec = tween(durationMillis = 300)) +
+                scaleIn(initialScale = 0.8f, animationSpec = tween(durationMillis = 300))
+    }
+
+    val exitTransition = remember {
+        fadeOut(animationSpec = tween(durationMillis = 300)) +
+                scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 300))
+    }
+
+    //The following piece of code used for animating was entirely written by ChatGPT 4o
+    AnimatedContent(
+        targetState = numberGrid.value[i][j],
+        transitionSpec = {
+            if (targetState > initialState) {
+                (slideInVertically { height -> height } + fadeIn()).togetherWith(slideOutVertically { height -> -height } + fadeOut())
+            } else {
+                (slideInVertically { height -> -height } + fadeIn()).togetherWith(slideOutVertically { height -> height } + fadeOut())
+            }
+        }, label = "hello"
+    ) {targetNum ->
+        if(targetNum>0) {
+            Column(
+                modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
@@ -1216,34 +1239,46 @@ fun displayContentForSinglePlayer(i:Int ,
                         } else {
                             hearSound.value = false
 
-                            val newNumberGrid = numberGrid.value.map { it.toMutableList() }.toMutableList()
+                            val newNumberGrid =
+                                numberGrid.value.map { it.toMutableList() }.toMutableList()
                             newNumberGrid[i][j]++
                             numberGrid.value = newNumberGrid
 
-                            val newBooleanGrid = booleanGrid.value.map { it.toMutableList() }.toMutableList()
+                            val newBooleanGrid =
+                                booleanGrid.value.map { it.toMutableList() }.toMutableList()
                             newBooleanGrid[i][j] = false
                             booleanGrid.value = newBooleanGrid
 
                             checkConditionForSinglePlayer(
-                                i,j,num,isScreenBlue, numberGrid, booleanGrid, redVal, blueVal, blueWinningCondition, redWinningCondition
+                                i,
+                                j,
+                                num,
+                                isScreenBlue,
+                                numberGrid,
+                                booleanGrid,
+                                redVal,
+                                blueVal,
+                                blueWinningCondition,
+                                redWinningCondition
                             )
                             isScreenBlue.value = !isScreenBlue.value
                             updatingBoxesOwned(booleanGrid)
                             var sizeOfBlue = boxesOwnedByBlue.value.size
 
-                            if(sizeOfBlue==0) {
+                            if (sizeOfBlue == 0) {
                                 //do nothing
-                            }
-                            else {
-                                var index = Random.nextInt(0,sizeOfBlue)
+                            } else {
+                                var index = Random.nextInt(0, sizeOfBlue)
                                 var row = boxesOwnedByBlue.value[index].first
                                 var column = boxesOwnedByBlue.value[index].second
 
-                                val newNumberGrid = numberGrid.value.map { it.toMutableList() }.toMutableList()
+                                val newNumberGrid =
+                                    numberGrid.value.map { it.toMutableList() }.toMutableList()
                                 newNumberGrid[row][column]++
                                 numberGrid.value = newNumberGrid
 
-                                val newBooleanGrid = booleanGrid.value.map { it.toMutableList() }.toMutableList()
+                                val newBooleanGrid =
+                                    booleanGrid.value.map { it.toMutableList() }.toMutableList()
                                 newBooleanGrid[row][column] = true
                                 booleanGrid.value = newBooleanGrid
 
@@ -1271,7 +1306,10 @@ fun displayContentForSinglePlayer(i:Int ,
                         contentColor = Color.White
                     ),
                     modifier = Modifier
-                        .size(width = (60-(numRows-3)*5).dp, height = (60-(numColumnsPerRow-3)*5).dp), //5=50 , 3=60 , 4=55 , 6=45 , 7=40
+                        .size(
+                            width = (60 - (numRows - 3) * 5).dp,
+                            height = (60 - (numColumnsPerRow - 3) * 5).dp
+                        ), //5=50 , 3=60 , 4=55 , 6=45 , 7=40
                     contentPadding = PaddingValues(1.dp)
                 ) {
                     Column(
@@ -1285,12 +1323,14 @@ fun displayContentForSinglePlayer(i:Int ,
                             modifier = Modifier
                                 .fillMaxSize()
                                 .background(Color.Transparent),
-                            fontSize = (35-(numRows-3)*2).sp, // 3=35 4=33 5=31 6=29 7=27 8=25
+                            fontSize = (35 - (numRows - 3) * 2).sp, // 3=35 4=33 5=31 6=29 7=27 8=25
                             textAlign = TextAlign.Center
                         )
                     }
                 }
             }
+        }
+    }
 }
 
 @Composable
@@ -1331,11 +1371,15 @@ fun generateButtonGridForSinglePlayer(
                                 val columnIndex = j
 
                                 // Create new lists to trigger recomposition
-                                val newNumberGrid = numberGrid.value.map { it.toMutableList() }.toMutableList()
+                                val newNumberGrid = numberGrid.value
+                                    .map { it.toMutableList() }
+                                    .toMutableList()
                                 newNumberGrid[rowIndex][columnIndex] += 3
                                 numberGrid.value = newNumberGrid
 
-                                val newBooleanGrid = booleanGrid.value.map { it.toMutableList() }.toMutableList()
+                                val newBooleanGrid = booleanGrid.value
+                                    .map { it.toMutableList() }
+                                    .toMutableList()
                                 newBooleanGrid[rowIndex][columnIndex] = false
                                 booleanGrid.value = newBooleanGrid
 

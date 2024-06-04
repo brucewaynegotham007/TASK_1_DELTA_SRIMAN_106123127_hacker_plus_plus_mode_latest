@@ -1313,11 +1313,9 @@ fun displayContent(
                 scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 300))
     }
 
-    var dummy = 100
-
     //The following piece of code used for animating was entirely written by ChatGPT 4o
     AnimatedContent(
-        targetState = dummy,
+        targetState = numberGrid.value[i][j],
         transitionSpec = {
             if (targetState > initialState) {
                 (slideInVertically { height -> height } + fadeIn()).togetherWith(slideOutVertically { height -> -height } + fadeOut())
