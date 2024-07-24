@@ -46,9 +46,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -57,6 +61,8 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Surface
@@ -78,6 +84,8 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -355,7 +363,7 @@ fun additionalModeOption(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .scale(1.3f),
-            colors = CardDefaults.cardColors(containerColor = Color.Yellow),
+            colors = CardDefaults.cardColors(containerColor = Color(150,150,150).copy(alpha = 0.9f)),
         ) {
             Spacer(modifier = Modifier.padding((20 + topPadding.value).dp))
             Card(
@@ -1132,27 +1140,7 @@ val eighthBoxVal : MutableState<String> = mutableStateOf("PLAYER 8")
 
 val track : MutableState<Int> = mutableIntStateOf(0)
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MyTextField() {
-    var textState by remember { mutableStateOf("") }
-
-    TextField(
-        value = textState,
-        onValueChange = { textState = it },
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        placeholder = { Text("Enter text here") },
-        colors = TextFieldDefaults.textFieldColors(
-            cursorColor = Color.Blue,
-            focusedIndicatorColor = Color.Blue,
-            unfocusedIndicatorColor = Color.Gray
-        ),
-        shape = RoundedCornerShape(8.dp),
-        singleLine = true
-    )
-}
+val shape : MutableState<String> = mutableStateOf("Normal")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -1483,24 +1471,31 @@ fun generateButtonGrid(
     count: MutableState<Int>
 ): List<List<@Composable () -> Unit>> {
     val buttonGrid = mutableListOf<MutableList<@Composable () -> Unit>>()
-
+    var shapeOfButton : Shape
+    if(shape.value=="Normal") {
+        shapeOfButton = RoundedCornerShape(12.dp)
+    }
+    else if(shape.value=="Rectangle") {
+        shapeOfButton = RectangleShape
+    }
+    else if(shape.value=="Diamond") {
+        shapeOfButton = CutCornerShape(50.dp)
+    }
+    else {
+        shapeOfButton = CircleShape
+    }
     for (i in 0 until numRows) {
         val row = mutableListOf<@Composable () -> Unit>()
         for (j in 0 until numColumnsPerRow) {
             val buttonContent: @Composable () -> Unit = {
-                Box(
+                Card(
                     modifier = Modifier
                         .size(
                             width = (65 - (numColumnsPerRow - 3) * 5).dp,
                             height = (65 - (numRows - 3) * 5).dp
                         ) // 8=40 , 5=55 , 6=50 , 7=45 , 4=60 , 3=65
-                        .background(
-                            color = Color(245, 229, 206),
-                            shape = RoundedCornerShape(12.dp)
-                        )
                         .scale(1f)
                         .clickable {
-
                             trackingWhoseTurn(eachPlayerLosingCondition, whoseTurn)
 
                             Log.d("count", count.value.toString())
@@ -1525,7 +1520,9 @@ fun generateButtonGrid(
 
                             count.value++
 
-                        }
+                        },
+                    colors = CardDefaults.cardColors(Color(245, 229, 206)),
+                    shape = shapeOfButton
                 ) {
                     val rowIndex = i
                     val columnIndex = j
@@ -2582,7 +2579,7 @@ fun themeSelector() {
     ) {
         Row() {
             Card(
-                modifier = Modifier.size(250.dp,45.dp),
+                modifier = Modifier.size(200.dp,45.dp),
                 colors = CardDefaults.cardColors(Color(red = 5, green = 5, blue = 129))
             ) {
                 Column(
@@ -2600,7 +2597,7 @@ fun themeSelector() {
             Spacer(modifier = Modifier.padding(5.dp))
             Card(
                 onClick = { /*TODO*/ },
-                modifier = Modifier.size(90.dp, 45.dp)
+                modifier = Modifier.size(120.dp, 45.dp)
             ) {
                 Row(
                     horizontalArrangement = Arrangement.Center,
@@ -2610,7 +2607,7 @@ fun themeSelector() {
                         text = defaultValueInDropDown.value,
                         modifier = Modifier
                             .padding(top = 10.dp, start = 10.dp)
-                            .width(50.dp),
+                            .width(80.dp),
                         textAlign = TextAlign.Center
                     )
                     Column(

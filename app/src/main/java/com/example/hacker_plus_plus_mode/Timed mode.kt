@@ -54,6 +54,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 import kotlin.random.Random
@@ -377,35 +379,23 @@ fun timedMode(navController: NavController) {
         secondBoxVal.value = "PLAYER 2"
     }
 
-    val whoseTurn = remember{ mutableStateOf(0) }
+    val viewModel : ThirdPageForTimedModel = viewModel()
 
-    val playerGrid = remember { mutableStateOf(mutableListOf<MutableList<Int?>>().apply {
-        repeat(numRows) { add(MutableList(numColumnsPerRow) { null }) }
-    }) }
+    val whoseTurn = viewModel.whoseTurn
 
-    val numberGrid = remember { mutableStateOf(mutableListOf<MutableList<Int>>().apply {
-        repeat(numRows) { add(MutableList(numColumnsPerRow) { 0 }) }
-    }) }
+    val playerGrid = viewModel.playerGrid
 
-    val eachPlayerVal = remember { mutableStateOf(mutableListOf<Int>().apply {
-        repeat(noOfPlayers.value) {add(0)}
-    }) }
+    val numberGrid = viewModel.numberGrid
 
-    val eachPlayerLosingCondition = remember { mutableStateOf(mutableListOf<Boolean>().apply {
-        repeat(noOfPlayers.value) {add(false)}
-    }) }
+    val eachPlayerVal = viewModel.eachPlayerVal
 
-    val eachPlayerWinningCondition = remember { mutableStateOf(mutableListOf<Boolean>().apply {
-        repeat(noOfPlayers.value) {add(false)}
-    }) }
+    val eachPlayerLosingCondition = viewModel.eachPlayerLosingCondition
 
-    val eachPlayerTimer = remember { mutableStateOf(mutableListOf<Int>().apply {
-        repeat(8) {add(timerVal.value)}
-    }) }
+    val eachPlayerWinningCondition = viewModel.eachPlayerWinningCondition
 
-    val isEachPlayerTimerRunning = remember { mutableStateOf(mutableListOf<Boolean>().apply {
-        repeat(8) {add(true)}
-    }) }
+    val eachPlayerTimer = viewModel.eachPlayerTimer
+
+    val isEachPlayerTimerRunning = viewModel.isEachPlayerTimerRunning
 
     LaunchedEffect(isEachPlayerTimerRunning.value[0] and (whoseTurn.value==0)) {
         if (isEachPlayerTimerRunning.value[0] and (whoseTurn.value==0)) {
@@ -503,7 +493,7 @@ fun timedMode(navController: NavController) {
         }
     }
 
-    val count = remember { mutableIntStateOf(0) }
+    val count = viewModel.count
 
     val buttonGrid = generateButtonGrid(
         numRows = numRows, numColumnsPerRow = numColumnsPerRow ,

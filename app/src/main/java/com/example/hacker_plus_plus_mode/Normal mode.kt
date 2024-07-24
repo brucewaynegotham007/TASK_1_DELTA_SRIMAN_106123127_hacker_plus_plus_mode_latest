@@ -31,6 +31,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -46,6 +47,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -55,6 +57,8 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -65,6 +69,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import kotlin.random.Random
 
@@ -162,13 +167,13 @@ fun gridSizeNormal(navController: NavController,
                    showGridSize : MutableState<Boolean>) {
 
     val dropDownMenuExpanded = remember { mutableStateOf(false) }
-
+    val shapeExpanded = remember { mutableStateOf(false) }
     val defaultValueInDropDown = remember { mutableStateOf("Select") }
 
     if(showGridSize.value) {
         AlertDialog(
             onDismissRequest = { showGridSize.value = false },
-            modifier = Modifier.size(250.dp, 200.dp)
+            modifier = Modifier.size(250.dp, 370.dp)
         ) {
             Card(
                 modifier = Modifier
@@ -178,6 +183,7 @@ fun gridSizeNormal(navController: NavController,
                 colors = CardDefaults.cardColors(containerColor = Color(62, 64, 118)),
 
                 ) {
+                Spacer(modifier = Modifier.padding(top = 20.dp))
                 Card(
                     onClick = { /*TODO*/ },
                     modifier = Modifier
@@ -341,6 +347,129 @@ fun gridSizeNormal(navController: NavController,
                         }
                     }
                 }
+                Card(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .padding(top = 15.dp, start = 25.dp)
+                        .size(200.dp, 50.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Red,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Choose shape",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.padding(5.dp))
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Card(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.size(140.dp, 45.dp)
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = shape.value,
+                                modifier = Modifier
+                                    .padding(top = 10.dp, start = 10.dp)
+                                    .width(80.dp),
+                                textAlign = TextAlign.Center
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.End
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.baseline_arrow_drop_down_24),
+                                    contentDescription = "Drop down arrow",
+                                    modifier = Modifier
+                                        .padding(top = 10.dp, end = 8.dp)
+                                        .clickable {
+                                            shapeExpanded.value = !shapeExpanded.value
+                                        }
+                                        .scale(1.4f)
+                                )
+                            }
+                        }
+
+                        DropdownMenu(
+                            expanded = shapeExpanded.value,
+                            onDismissRequest = { /*TODO*/ },
+                            modifier = Modifier.width(180.dp)
+                        ) {
+                            DropdownMenuItem(text = {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(text = "Normal", fontSize = 18.sp)
+                                }
+                            },
+                                onClick = {
+                                    shape.value = "Normal"
+                                    shapeExpanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(text = {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(text = "Rectangle", fontSize = 18.sp)
+                                }
+                            },
+                                onClick = {
+                                    shape.value = "Rectangle"
+                                    shapeExpanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(text = {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(text = "Circle", fontSize = 18.sp)
+                                }
+                            },
+                                onClick = {
+                                    shape.value = "Circle"
+                                    shapeExpanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(text = {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(text = "Diamond", fontSize = 18.sp)
+                                }
+                            },
+                                onClick = {
+                                    shape.value = "Diamond"
+                                    shapeExpanded.value = false
+                                }
+                            )
+                        }
+                    }
+                }
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -389,29 +518,15 @@ fun thirdPage(navController: NavController) {
         secondBoxVal.value = "PLAYER 2"
     }
 
-    val whoseTurn = remember{ mutableStateOf(0) }
+    val viewModel : ThirdPageModel = viewModel()
 
-    val playerGrid = remember { mutableStateOf(mutableListOf<MutableList<Int?>>().apply {
-        repeat(numRows) { add(MutableList(numColumnsPerRow) { null }) }
-    }) }
-
-    val numberGrid = remember { mutableStateOf(mutableListOf<MutableList<Int>>().apply {
-        repeat(numRows) { add(MutableList(numColumnsPerRow) { 0 }) }
-    }) }
-
-    val eachPlayerVal = remember { mutableStateOf(mutableListOf<Int>().apply {
-        repeat(noOfPlayers.value) {add(0)}
-    }) }
-
-    val eachPlayerLosingCondition = remember { mutableStateOf(mutableListOf<Boolean>().apply {
-        repeat(noOfPlayers.value) {add(false)}
-    }) }
-
-    val eachPlayerWinningCondition = remember { mutableStateOf(mutableListOf<Boolean>().apply {
-        repeat(noOfPlayers.value) {add(false)}
-    }) }
-
-    val count = remember { mutableIntStateOf(0) }
+    val whoseTurn = viewModel.whoseTurn
+    val playerGrid = viewModel.playerGrid
+    val numberGrid = viewModel.numberGrid
+    val eachPlayerVal = viewModel.eachPlayerVal
+    val eachPlayerLosingCondition = viewModel.eachPlayerLosingCondition
+    val eachPlayerWinningCondition = viewModel.eachPlayerWinningCondition
+    val count = viewModel.count
 
     val buttonGrid = generateButtonGrid(
         numRows = numRows, numColumnsPerRow = numColumnsPerRow ,
@@ -1349,20 +1464,28 @@ fun generateButtonGridForSinglePlayer(
     countOther: MutableState<Int>
 ): List<List<@Composable () -> Unit>> {
     val buttonGrid = mutableListOf<MutableList<@Composable () -> Unit>>()
-
+    var shapeOfButton : Shape
+    if(shape.value=="Normal") {
+        shapeOfButton = RoundedCornerShape(12.dp)
+    }
+    else if(shape.value=="Rectangle") {
+        shapeOfButton = RectangleShape
+    }
+    else if(shape.value=="Diamond") {
+        shapeOfButton = CutCornerShape(50.dp)
+    }
+    else {
+        shapeOfButton = CircleShape
+    }
     for (i in 0 until numRows) {
         val row = mutableListOf<@Composable () -> Unit>()
         for (j in 0 until numColumnsPerRow) {
             val buttonContent: @Composable () -> Unit = {
-                Box(
+                Card(
                     modifier = Modifier
                         .size(
                             width = (65 - (numColumnsPerRow - 3) * 5).dp,
                             height = (65 - (numRows - 3) * 5).dp
-                        )
-                        .background(
-                            color = Color(245, 229, 206),
-                            shape = RoundedCornerShape(12.dp)
                         )
                         .scale(1f)
                         .clickable {
@@ -1402,7 +1525,8 @@ fun generateButtonGridForSinglePlayer(
 
                             redVal.value = 3
                             blueVal.value = 3
-                        }
+                        },
+                    shape = shapeOfButton
                 ) {
 
                     if (numberGrid.value[i][j] != 0) {
@@ -1448,25 +1572,23 @@ fun singlePlayerMode(navController: NavController) {
         secondBoxVal.value = "PLAYER 2"
     }
 
-    val isScreenBlue = remember{ mutableStateOf(false) }
+    val viewModel : ThirdPageForSinglePlayer = viewModel()
 
-    val booleanGrid = remember { mutableStateOf(mutableListOf<MutableList<Boolean?>>().apply {
-        repeat(numRows) { add(MutableList(numColumnsPerRow) { null }) }
-    }) }
+    val isScreenBlue = viewModel.isScreenBlue
 
-    val numberGrid = remember { mutableStateOf(mutableListOf<MutableList<Int>>().apply {
-        repeat(numRows) { add(MutableList(numColumnsPerRow) { 0 }) }
-    }) }
+    val booleanGrid = viewModel.booleanGrid
 
-    val blueVal = remember{ mutableIntStateOf(0) }
-    val redVal = remember{ mutableIntStateOf(0) }
+    val numberGrid = viewModel.numberGrid
 
-    val blueWinningCondition = remember { mutableStateOf(false) }
-    val redWinningCondition = remember { mutableStateOf(false) }
+    val blueVal = viewModel.blueVal
+    val redVal = viewModel.redVal
 
-    val count = remember { mutableIntStateOf(0) }
+    val blueWinningCondition = viewModel.blueWinningCondition
+    val redWinningCondition = viewModel.redWinningCondition
 
-    val countOther = remember { mutableIntStateOf(0) }
+    val count = viewModel.count
+
+    val countOther = viewModel.countOther
 
     val buttonGrid = generateButtonGridForSinglePlayer(numRows = numRows, numColumnsPerRow = numColumnsPerRow ,
         isScreenBlue , numberGrid , booleanGrid , redVal, blueVal , navController,blueWinningCondition, redWinningCondition , count , countOther)

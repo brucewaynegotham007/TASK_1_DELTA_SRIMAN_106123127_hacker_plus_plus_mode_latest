@@ -51,6 +51,23 @@ android {
 
 dependencies {
 
+    // Update the compose BOM version
+    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+
+    // Add these Compose dependencies
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+
+    // For AndroidView
+    implementation("androidx.compose.ui:ui-viewbinding")
+
+    // For additional Compose runtime features
+    implementation("androidx.compose.runtime:runtime")
+    implementation("androidx.compose.runtime:runtime-livedata")
+    implementation("androidx.compose.runtime:runtime-rxjava2")
+
     val nav_version = "2.7.7"
 
     implementation("androidx.navigation:navigation-compose:$nav_version")
@@ -71,3 +88,4 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 }
+
