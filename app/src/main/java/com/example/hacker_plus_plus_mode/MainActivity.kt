@@ -65,6 +65,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
@@ -363,7 +364,7 @@ fun additionalModeOption(navController: NavController) {
             modifier = Modifier
                 .fillMaxSize()
                 .scale(1.3f),
-            colors = CardDefaults.cardColors(containerColor = Color(150,150,150).copy(alpha = 0.9f)),
+            colors = CardDefaults.cardColors(containerColor = Color(62, 64, 118).copy(alpha = 1f)),
         ) {
             Spacer(modifier = Modifier.padding((20 + topPadding.value).dp))
             Card(
@@ -449,7 +450,11 @@ fun additionalModeOption(navController: NavController) {
                                 selectedNormal.value = true
                                 selectedTimed.value = false
                                 modeSelector.value = "Normal"
-                            }
+                            },
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = Color.Yellow,
+                                unselectedColor = Color.Black
+                            )
                         )
                         Text(
                             text = "NORMAL MODE",
@@ -463,7 +468,11 @@ fun additionalModeOption(navController: NavController) {
                                 selectedTimed.value = true
                                 selectedNormal.value = false
                                 modeSelector.value = "Timed"
-                            }
+                            },
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = Color.Yellow,
+                                unselectedColor = Color.Black
+                            )
                         )
                         Text(
                             text = "TIMED MODE",

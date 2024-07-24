@@ -153,13 +153,13 @@ fun secondPageForTimedMode(navController: NavController) {
 fun gridSizeTimed(navController: NavController,
                   showGridSize: MutableState<Boolean>) {
     val dropDownMenuExpanded = remember { mutableStateOf(false) }
-
+    val shapeExpanded = remember { mutableStateOf(false) }
     val defaultValueInDropDown = remember { mutableStateOf("Select") }
 
     if (showGridSize.value) {
         AlertDialog(
             onDismissRequest = { showGridSize.value = false },
-            modifier = Modifier.size(250.dp, 200.dp)
+            modifier = Modifier.size(250.dp, 370.dp)
         ) {
             Card(
                 modifier = Modifier
@@ -169,6 +169,7 @@ fun gridSizeTimed(navController: NavController,
                 colors = CardDefaults.cardColors(containerColor = Color(62, 64, 118)),
 
                 ) {
+                Spacer(modifier = Modifier.padding(top = 20.dp))
                 Card(
                     onClick = { /*TODO*/ },
                     modifier = Modifier
@@ -332,6 +333,129 @@ fun gridSizeTimed(navController: NavController,
                         }
                     }
                 }
+                Card(
+                    onClick = { /*TODO*/ },
+                    modifier = Modifier
+                        .padding(top = 15.dp, start = 25.dp)
+                        .size(200.dp, 50.dp),
+                    colors = CardDefaults.cardColors(
+                        containerColor = Color.Red,
+                        contentColor = Color.Black
+                    )
+                ) {
+                    Column(
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "Choose shape",
+                            fontSize = 20.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.padding(5.dp))
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Card(
+                        onClick = { /*TODO*/ },
+                        modifier = Modifier.size(140.dp, 45.dp)
+                    ) {
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(
+                                text = shape.value,
+                                modifier = Modifier
+                                    .padding(top = 10.dp, start = 10.dp)
+                                    .width(80.dp),
+                                textAlign = TextAlign.Center
+                            )
+                            Column(
+                                modifier = Modifier.fillMaxWidth(),
+                                horizontalAlignment = Alignment.End
+                            ) {
+                                Image(
+                                    painter = painterResource(id = R.drawable.baseline_arrow_drop_down_24),
+                                    contentDescription = "Drop down arrow",
+                                    modifier = Modifier
+                                        .padding(top = 10.dp, end = 8.dp)
+                                        .clickable {
+                                            shapeExpanded.value = !shapeExpanded.value
+                                        }
+                                        .scale(1.4f)
+                                )
+                            }
+                        }
+
+                        DropdownMenu(
+                            expanded = shapeExpanded.value,
+                            onDismissRequest = { /*TODO*/ },
+                            modifier = Modifier.width(180.dp)
+                        ) {
+                            DropdownMenuItem(text = {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(text = "Normal", fontSize = 18.sp)
+                                }
+                            },
+                                onClick = {
+                                    shape.value = "Normal"
+                                    shapeExpanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(text = {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(text = "Rectangle", fontSize = 18.sp)
+                                }
+                            },
+                                onClick = {
+                                    shape.value = "Rectangle"
+                                    shapeExpanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(text = {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(text = "Circle", fontSize = 18.sp)
+                                }
+                            },
+                                onClick = {
+                                    shape.value = "Circle"
+                                    shapeExpanded.value = false
+                                }
+                            )
+                            DropdownMenuItem(text = {
+                                Column(
+                                    verticalArrangement = Arrangement.Center,
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text(text = "Diamond", fontSize = 18.sp)
+                                }
+                            },
+                                onClick = {
+                                    shape.value = "Diamond"
+                                    shapeExpanded.value = false
+                                }
+                            )
+                        }
+                    }
+                }
                 Column(
                     modifier = Modifier.fillMaxSize(),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -346,9 +470,10 @@ fun gridSizeTimed(navController: NavController,
                             for(u in 0 until noOfPlayers.value) {
                                 eachPlayerWinningCount.value[u] = 0
                             }
-                            if (noOfPlayers.value == 1) {
+                            if(noOfPlayers.value==1) {
                                 navController.navigate("singlePlayerMode")
-                            } else {
+                            }
+                            else {
                                 navController.navigate("timedMode")
                             }
                         },
