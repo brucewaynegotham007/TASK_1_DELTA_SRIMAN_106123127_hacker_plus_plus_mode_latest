@@ -24,7 +24,9 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
+import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
@@ -53,6 +55,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -161,7 +164,22 @@ fun myApp() {
     clearSavedData(sharedPreferences)
 
     val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "firstscreen") {
+    NavHost(
+        navController = navController,
+        startDestination = "firstscreen",
+        enterTransition = {
+            slideInHorizontally(
+                animationSpec = tween(1500),
+                initialOffsetX = { 1300 }
+            ) + scaleIn(animationSpec = tween(1000), initialScale = 0.05f)
+        },
+        exitTransition = {
+            slideOutHorizontally(
+                animationSpec = tween(1500),
+                targetOffsetX = { -1300 }
+            ) + scaleOut(animationSpec = tween(1000), targetScale = 3.2f)
+        }
+    ) {
         composable("firstscreen") {
             firstPage(Modifier.fillMaxSize() , navController)
         }
@@ -186,6 +204,8 @@ fun myApp() {
     }
 }
 
+val showPersistentDisplay = mutableStateOf(false)
+
 @Composable
 fun firstPage(modifier: Modifier = Modifier , navController: NavController) {
 
@@ -206,6 +226,7 @@ fun firstPage(modifier: Modifier = Modifier , navController: NavController) {
         update = { /* No update needed */ }
     )
     ContentOnTopOfImage(navController = navController)
+    persistentDisplay()
 }
 
 @Composable
@@ -215,11 +236,11 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
         modifier = Modifier.padding(end = 20.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Spacer(modifier = Modifier.padding(top = 10.dp))
+        Spacer(modifier = Modifier.padding(top = 60.dp))
         Text(
             text = "COLOUR",
             textAlign = TextAlign.Center,
-            fontSize = 72.sp,
+            fontSize = 68.sp,
             fontStyle = FontStyle.Italic,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = leckerlioneRegular,
@@ -231,7 +252,7 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
             modifier = Modifier.fillMaxWidth(),
             text = "CONQUEST",
             textAlign = TextAlign.Center,
-            fontSize = 72.sp,
+            fontSize = 68.sp,
             fontStyle = FontStyle.Italic,
             fontWeight = FontWeight.ExtraBold,
             fontFamily = leckerlioneRegular,
@@ -242,12 +263,9 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
         )
     }
 
-    persistentDisplay()
-
     Column(
         modifier = Modifier
-            .height(36.dp)
-            .offset(0.dp, 84.dp),
+            .height(36.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -261,12 +279,13 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
     val isChecked = remember { mutableStateOf(false) }
 
     Row(modifier = Modifier
-        .padding(top = 620.dp)
-        .fillMaxWidth()
+        .padding(top = 600.dp)
+        .fillMaxWidth(),
+        horizontalArrangement = Arrangement.Center
     ) {
-        Text(text = "LIGHT MODE",
-            modifier = Modifier.padding(start = 50.dp , top = 8.dp),
-            fontSize = 20.sp,
+        Text(text = "DARK MODE",
+            modifier = Modifier.padding(top = 8.dp),
+            fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.padding(start = 15.dp))
@@ -279,15 +298,10 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
                 onCheckedChange = {
                     darkOrNormalMode.value = !darkOrNormalMode.value
                     isChecked.value = !isChecked.value
-                }
+                },
+                modifier = Modifier.padding(end = 10.dp)
             )
         }
-        Spacer(modifier = Modifier.padding(start = 15.dp))
-        Text(text = "DARK MODE",
-            modifier = Modifier.padding(top = 8.dp),
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
-        )
     }
 
     Column(
@@ -297,10 +311,21 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
         verticalArrangement = Arrangement.Bottom
     ) {
         Row(horizontalArrangement = Arrangement.SpaceBetween) {
+            Icon(
+                Icons.Default.Menu,
+                contentDescription = "Show persistant display",
+                modifier = Modifier
+                    .clickable {
+                        showPersistentDisplay.value = true
+                    }
+                    .scale(2f)
+                    .padding(top = 15.dp)
+            )
+            Spacer(modifier = Modifier.padding(start = 30.dp))
             val showAdditionalModeOption = remember { mutableStateOf(false) }
             Button(
                 onClick = { showAdditionalModeOption.value = true},
-                modifier = Modifier.size(width = 250.dp , height = 70.dp),
+                modifier = Modifier.size(width = 180.dp , height = 68.dp),
                 colors = ButtonDefaults.buttonColors(Color(0,190,255))
             ) {
                 Text(
@@ -362,9 +387,8 @@ fun additionalModeOption(navController: NavController) {
     ) {
         Card(
             modifier = Modifier
-                .fillMaxSize()
                 .scale(1.3f),
-            colors = CardDefaults.cardColors(containerColor = Color(62, 64, 118).copy(alpha = 1f)),
+            colors = CardDefaults.cardColors(containerColor = Color(33, 150, 243, 255).copy(alpha = 1f)),
         ) {
             Spacer(modifier = Modifier.padding((20 + topPadding.value).dp))
             Card(
@@ -727,13 +751,13 @@ fun firstPlayerIconSecondPage() {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             drawLine(
                 start = Offset(0f, 60f), // Starting point (x, y)
-                end = Offset(170f, 60f), // Ending point (x, y)
+                end = Offset(230f, 60f), // Ending point (x, y)
                 color = Color.Red, // Line color
                 strokeWidth = 10f // Line width
             )
             drawLine(
-                start = Offset(275f, 60f), // Starting point (x, y)
-                end = Offset(445f, 60f), // Ending point (x, y)
+                start = Offset(360f, 60f), // Starting point (x, y)
+                end = Offset(580f, 60f), // Ending point (x, y)
                 color = Color.Red, // Line color
                 strokeWidth = 10f // Line width
             )
@@ -782,13 +806,13 @@ fun secondPlayerIconSecondPage() {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             drawLine(
                 start = Offset(0f, 70f), // Starting point (x, y)
-                end = Offset(155f, 70f), // Ending point (x, y)
+                end = Offset(185f, 70f), // Ending point (x, y)
                 color = Color(0, 190, 255), // Line color
                 strokeWidth = 10f // Line width
             )
             drawLine(
-                start = Offset(290f, 70f), // Starting point (x, y)
-                end = Offset(445f, 70f), // Ending point (x, y)
+                start = Offset(380f, 70f), // Starting point (x, y)
+                end = Offset(580f, 70f), // Ending point (x, y)
                 color = Color(0, 190, 255), // Line color
                 strokeWidth = 10f // Line width
             )
@@ -837,13 +861,13 @@ fun thirdPlayerIconSecondPage() {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             drawLine(
                 start = Offset(0f, 70f), // Starting point (x, y)
-                end = Offset(155f, 70f), // Ending point (x, y)
+                end = Offset(185f, 70f), // Ending point (x, y)
                 color = Color.Green, // Line color
                 strokeWidth = 10f // Line width
             )
             drawLine(
-                start = Offset(290f, 70f), // Starting point (x, y)
-                end = Offset(445f, 70f), // Ending point (x, y)
+                start = Offset(380f, 70f), // Starting point (x, y)
+                end = Offset(580f, 70f), // Ending point (x, y)
                 color = Color.Green, // Line color
                 strokeWidth = 10f // Line width
             )
@@ -892,13 +916,13 @@ fun fourthPlayerIconSecondPage() {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             drawLine(
                 start = Offset(0f, 70f), // Starting point (x, y)
-                end = Offset(155f, 70f), // Ending point (x, y)
+                end = Offset(175f, 70f), // Ending point (x, y)
                 color = Color.Yellow, // Line color
                 strokeWidth = 10f // Line width
             )
             drawLine(
-                start = Offset(290f, 70f), // Starting point (x, y)
-                end = Offset(445f, 70f), // Ending point (x, y)
+                start = Offset(400f, 70f), // Starting point (x, y)
+                end = Offset(580f, 70f), // Ending point (x, y)
                 color = Color.Yellow, // Line color
                 strokeWidth = 10f // Line width
             )
@@ -935,7 +959,7 @@ fun fifthPlayerIconSecondPage() {
             color = Color(5, 5, 129),
             fontSize = 110.sp,
             fontWeight = FontWeight.ExtraBold,
-            modifier = Modifier.offset(1.dp, -65.dp)
+            modifier = Modifier.offset(1.dp, -60.dp)
         )
         Text(
             text = "5",
@@ -947,13 +971,13 @@ fun fifthPlayerIconSecondPage() {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             drawLine(
                 start = Offset(0f, 70f), // Starting point (x, y)
-                end = Offset(155f, 70f), // Ending point (x, y)
+                end = Offset(185f, 70f), // Ending point (x, y)
                 color = Color.Magenta, // Line color
                 strokeWidth = 10f // Line width
             )
             drawLine(
-                start = Offset(290f, 70f), // Starting point (x, y)
-                end = Offset(445f, 70f), // Ending point (x, y)
+                start = Offset(390f, 70f), // Starting point (x, y)
+                end = Offset(580f, 70f), // Ending point (x, y)
                 color = Color.Magenta, // Line color
                 strokeWidth = 10f // Line width
             )
@@ -1002,13 +1026,13 @@ fun sixthPlayerIconSecondPage() {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             drawLine(
                 start = Offset(0f, 70f), // Starting point (x, y)
-                end = Offset(155f, 70f), // Ending point (x, y)
+                end = Offset(175f, 70f), // Ending point (x, y)
                 color = Color.Cyan, // Line color
                 strokeWidth = 10f // Line width
             )
             drawLine(
-                start = Offset(290f, 70f), // Starting point (x, y)
-                end = Offset(445f, 70f), // Ending point (x, y)
+                start = Offset(390f, 70f), // Starting point (x, y)
+                end = Offset(580f, 70f), // Ending point (x, y)
                 color = Color.Cyan, // Line color
                 strokeWidth = 10f // Line width
             )
@@ -1057,13 +1081,13 @@ fun seventhPlayerIconSecondPage() {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             drawLine(
                 start = Offset(0f, 70f), // Starting point (x, y)
-                end = Offset(155f, 70f), // Ending point (x, y)
+                end = Offset(225f, 70f), // Ending point (x, y)
                 color = Color.DarkGray, // Line color
                 strokeWidth = 10f // Line width
             )
             drawLine(
-                start = Offset(290f, 70f), // Starting point (x, y)
-                end = Offset(445f, 70f), // Ending point (x, y)
+                start = Offset(330f, 70f), // Starting point (x, y)
+                end = Offset(580f, 70f), // Ending point (x, y)
                 color = Color.DarkGray, // Line color
                 strokeWidth = 10f // Line width
             )
@@ -1112,13 +1136,13 @@ fun eighthPlayerIconSecondPage() {
         Canvas(modifier = Modifier.fillMaxWidth()) {
             drawLine(
                 start = Offset(0f, 70f), // Starting point (x, y)
-                end = Offset(155f, 70f), // Ending point (x, y)
+                end = Offset(185f, 70f), // Ending point (x, y)
                 color = Color.LightGray, // Line color
                 strokeWidth = 10f // Line width
             )
             drawLine(
-                start = Offset(290f, 70f), // Starting point (x, y)
-                end = Offset(445f, 70f), // Ending point (x, y)
+                start = Offset(380f, 70f), // Starting point (x, y)
+                end = Offset(580f, 70f), // Ending point (x, y)
                 color = Color.LightGray, // Line color
                 strokeWidth = 10f // Line width
             )
@@ -1336,7 +1360,7 @@ fun displayContent(
                 if (playerGrid.value[i][j] == 0) {
                     colorOfButton = Color.Red
                 } else if (playerGrid.value[i][j] == 1) {
-                    colorOfButton = Color.Blue
+                    colorOfButton = Color(0,190,255)
                 } else if (playerGrid.value[i][j] == 2) {
                     colorOfButton = Color.Green
                 } else if (playerGrid.value[i][j] == 3) {
@@ -1761,80 +1785,91 @@ fun managingPersistentDisplay(sharedPreferences: SharedPreferences) {
     }
 }
 
-@Composable
-fun persistentDisplayTableHeadings(temp : String) { // temp must be made globally .. just for time being it is passed here
-    if(temp!= "No Data") {
-        Row(
-            modifier = Modifier.offset(0.dp, (-100).dp),
-            horizontalArrangement = Arrangement.Center
-        ) {
-            Text(text = "S.no",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.offset(-62.dp,0.dp),
-                fontSize = 20.sp
-            )
-            Text(text = "Player who won",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.offset(10.dp,0.dp),
-                fontSize = 20.sp
-            )
-            Text(text = "Score",
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.offset(60.dp,0.dp),
-                fontSize = 20.sp
-            )
-        }
-    }
-}
-
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun persistentDisplay() {
 
     val context = LocalContext.current
     val sharedPreferences = remember { context.getSharedPreferences("Color Conquest" , Context.MODE_PRIVATE) }
 
-    Column(horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .height(50.dp)
-            .fillMaxWidth()
-    ) {
-
-        persistentDisplayTableHeadings(temp = "Hello world") // change this accordingly mate
-
-        LazyColumn(
+    if(showPersistentDisplay.value){
+        AlertDialog(
+            onDismissRequest = { showPersistentDisplay.value = false },
             modifier = Modifier
-                .offset(0.dp, (-80).dp)
-                .height(105.dp)
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .fillMaxWidth()
+                .height(600.dp)
         ) {
-            itemsIndexed(savedItems) { index, item ->
+            Card(
+                modifier = Modifier.fillMaxSize(),
+                colors = CardDefaults.cardColors(containerColor = Color(162, 164, 218))
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .height(50.dp)
+                        .fillMaxWidth()
+                ) {
+                    Spacer(modifier = Modifier.padding(top = 20.dp))
+                    Row(
+                        horizontalArrangement = Arrangement.Center
+                    ) {
+                        Text(
+                            text = "S.no",
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier,
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.padding(start = 50.dp))
+                        Text(
+                            text = "Winner",
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier,
+                            fontSize = 20.sp
+                        )
+                        Spacer(modifier = Modifier.padding(start = 50.dp))
+                        Text(
+                            text = "Score",
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier,
+                            fontSize = 20.sp
+                        )
+                    }
 
-                Log.d("index", index.toString())
+                    LazyColumn(
+                        modifier = Modifier
+                            .height(400.dp)
+                            .fillMaxWidth(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        itemsIndexed(savedItems) { index, item ->
 
-                Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                    Text(text = (index + 1).toString(),
-                        textAlign = TextAlign.Left,
-                        modifier = Modifier
-                            .offset(-62.dp, 0.dp)
-                            .width(50.dp),
-                        fontSize = 20.sp
-                    )
-                    Text(text = savedPlayers[index],
-                        textAlign = TextAlign.Left,
-                        modifier = Modifier
-                            .offset(5.dp, 0.dp)
-                            .width(110.dp),
-                        fontSize = 20.sp
-                    )
-                    Text(text = item,
-                        textAlign = TextAlign.Left,
-                        modifier = Modifier
-                            .offset(100.dp, 0.dp)
-                            .width(50.dp),
-                        fontSize = 20.sp
-                    )
+                            Log.d("index", index.toString())
+
+                            Row(horizontalArrangement = Arrangement.SpaceBetween) {
+                                Text(
+                                    text = (index + 1).toString(),
+                                    textAlign = TextAlign.Left,
+                                    modifier = Modifier,
+                                    fontSize = 20.sp
+                                )
+                                Spacer(modifier = Modifier.padding(start = 50.dp))
+                                Text(
+                                    text = savedPlayers[index],
+                                    textAlign = TextAlign.Left,
+                                    modifier = Modifier,
+                                    fontSize = 20.sp
+                                )
+                                Spacer(modifier = Modifier.padding(start = 50.dp))
+                                Text(
+                                    text = item,
+                                    textAlign = TextAlign.Left,
+                                    modifier = Modifier,
+                                    fontSize = 20.sp
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }

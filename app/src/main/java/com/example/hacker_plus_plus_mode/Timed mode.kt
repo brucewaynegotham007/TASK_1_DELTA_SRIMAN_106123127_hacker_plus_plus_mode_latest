@@ -166,7 +166,7 @@ fun gridSizeTimed(navController: NavController,
                     .fillMaxSize()
                     .scale(1.3f),
                 shape = CutCornerShape(30.dp, 30.dp, 30.dp, 30.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(62, 64, 118)),
+                colors = CardDefaults.cardColors(containerColor = Color(162, 164, 218)),
 
                 ) {
                 Spacer(modifier = Modifier.padding(top = 20.dp))

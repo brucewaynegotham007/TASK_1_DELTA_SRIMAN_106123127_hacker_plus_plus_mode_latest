@@ -180,7 +180,7 @@ fun gridSizeNormal(navController: NavController,
                     .fillMaxSize()
                     .scale(1.3f),
                 shape = CutCornerShape(30.dp, 30.dp, 30.dp, 30.dp),
-                colors = CardDefaults.cardColors(containerColor = Color(62, 64, 118)),
+                colors = CardDefaults.cardColors(containerColor = Color(162, 164, 218)),
 
                 ) {
                 Spacer(modifier = Modifier.padding(top = 20.dp))
@@ -1417,7 +1417,7 @@ fun displayContentForSinglePlayer(i:Int ,
                         }
                     },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (booleanGrid.value[i][j] == true) Color.Blue else Color.Red,
+                        containerColor = if (booleanGrid.value[i][j] == true) Color(0,190,255) else Color.Red,
                         contentColor = Color.White
                     ),
                     modifier = Modifier
