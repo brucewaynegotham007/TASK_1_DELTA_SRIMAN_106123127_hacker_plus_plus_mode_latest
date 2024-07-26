@@ -1,6 +1,8 @@
 package com.example.hacker_plus_plus_mode
 
 import android.content.Context
+import android.media.AudioAttributes
+import android.media.SoundPool
 import android.util.Log
 import android.view.ViewGroup
 import android.widget.ImageView
@@ -45,12 +47,14 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
@@ -1315,10 +1319,34 @@ fun displayContentForSinglePlayer(i:Int ,
                    blueWinningCondition: MutableState<Boolean>,
                    redWinningCondition: MutableState<Boolean>) {
 
-            val hearSound = remember { mutableStateOf(false) }
-            if(hearSound.value) {
-                soundEffectsForInvalidMove()
+    val context = LocalContext.current
+    var soundPool by remember{ mutableStateOf<SoundPool?>(null) }
+    var soundId by remember { mutableIntStateOf(0) }
+
+    DisposableEffect(Unit) {
+
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(1)
+            .setAudioAttributes(audioAttributes)
+            .build().apply {
+                soundId = load(context, R.raw.wrong_sound, 1)
             }
+
+        onDispose {
+            soundPool?.release()
+        }
+
+    }
+
+    val hearSound = remember { mutableStateOf(false) }
+    if (hearSound.value) {
+        soundPool?.play(soundId, 1f, 1f, 1, 0, 1f)
+    }
 
     val enterTransition = remember {
         fadeIn(animationSpec = tween(durationMillis = 300)) +
@@ -1352,8 +1380,6 @@ fun displayContentForSinglePlayer(i:Int ,
                         if (isScreenBlue.value != booleanGrid.value[i][j]) {
                             hearSound.value = true
                         } else {
-                            hearSound.value = false
-
                             val newNumberGrid =
                                 numberGrid.value.map { it.toMutableList() }.toMutableList()
                             newNumberGrid[i][j]++

@@ -48,11 +48,13 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CutCornerShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.Menu
@@ -186,9 +188,6 @@ fun myApp() {
         composable("secondscreen") {
             secondPage(navController)
         }
-        composable("rulespage") {
-            rulesPage(navController)
-        }
         composable("thirdscreen") {
             thirdPage(navController)
         }
@@ -303,7 +302,7 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
             )
         }
     }
-
+    val showRules = remember { mutableStateOf(false) }
     Column(
         modifier = modifier
             .padding(50.dp)
@@ -341,12 +340,15 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
                 contentDescription = "Help Button",
                 modifier = Modifier
                     .clickable {
-                        navController.navigate("rulespage")
+                        showRules.value = true
                     }
                     .scale(3f)
                     .height(65.dp)
             )
         }
+    }
+    if(showRules.value) {
+        rulesPage(navController = navController , showRules)
     }
 }
 
@@ -1177,28 +1179,38 @@ val shape : MutableState<String> = mutableStateOf("Normal")
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun rulesPage(navController: NavController) {
-    Column(modifier = Modifier.fillMaxSize(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Card(modifier = Modifier.size(400.dp,800.dp)) {
-            Column(modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Text("GAME LOGIC : \n\n" +
-                        "1st Turn of each player: Players can choose any tile on the grid on this turn only. Clicking a tile assigns your colour to it and awards you 3 points on that tile.\n" + "\n" +
-                        "Subsequent Turns: After the first turn, players can only click on tiles that already have their own colour. Clicking a tile with your colour adds 1 point to that tile.The background colour indicates the next player.\n" + "\n" +
-                        "Conquest and Expansion: When a tile with your colour reaches 4 points, it triggers an expansion:\n" + "\n" +
-                        "The colour completely disappears from the original tile.\n" + "\n" +
-                        "Your colour spreads to the four surrounding squares in a plus shape (up, down, left, right).\n" + "\n" +
-                        "Each of the four surrounding squares gains 1 point with your colour.\n" + "\n" +
-                        "If any of the four has your opponent’s colour, you conquer the opponent's points on that tile while adding a point to it, completely erasing theirs.\n" + "\n" +
-                        "The expansion is retriggered if the neighbouring tile as well reaches 4 points this way.\n" + "\n" +
-                        "Players take turns clicking on tiles and the objective is to eliminate your opponent's colour entirely from the screen.")
+fun rulesPage(navController: NavController , showDialog : MutableState<Boolean>) {
+    if(showDialog.value){
+        AlertDialog(
+            onDismissRequest = {
+                showDialog.value = false
+            },
+            confirmButton = {
+                //do nothing
+            },
+            modifier = Modifier.height(500.dp),
+            title = {Text("RULES", fontWeight = FontWeight.Bold)},
+            text = {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                        .size(350.dp, 500.dp)
+                ) {
+                    Text("1st Turn of each player:", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("Players can choose any tile on the grid on this turn only. Clicking a tile assigns your colour to it and awards you 3 points on that tile.\n", fontSize = 20.sp)
+                    Text("Subsequent Turns:", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("After the first turn, players can only click on tiles that already have their own colour. Clicking a tile with your colour adds 1 point to that tile.The background colour indicates the next player.\n", fontSize = 20.sp)
+                    Text("Conquest and Expansion:", fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                    Text("When a tile with your colour reaches 4 points, it triggers an expansion:\n" +
+                            "The colour completely disappears from the original tile.\n" +
+                            "Your colour spreads to the four surrounding squares in a plus shape (up, down, left, right).\n" +
+                            "Each of the four surrounding squares gains 1 point with your colour.\n" +
+                            "If any of the four has your opponent’s colour, you conquer the opponent's points on that tile while adding a point to it, completely erasing theirs.\n" +
+                            "The expansion is retriggered if the neighbouring tile as well reaches 4 points this way.\n" +
+                            "Players take turns clicking on tiles and the objective is to eliminate your opponent's colour entirely from the screen.", fontSize = 20.sp)
+                }
             }
-        }
+        )
     }
 }
 
@@ -1214,16 +1226,12 @@ fun checkCondition(
     eachPlayerVal: MutableState<MutableList<Int>>
 ) {
 
-    // copied from chatgpt's response for "make my clumpsy code neat , tidy and small" ... the logic is
-    // the exact same one that I have written for normal and hacker mode ..
-
     val rowIndex = i
     val columnIndex = j
 
     if (numberGrid.value[i][j] >= 4) {
         numberGrid.value[i][j] = 0
 
-        // Define directions for neighbors (up, down, left, right)
         val directions = listOf(
             Pair(-1, 0), // Up
             Pair(1, 0),  // Down
@@ -1231,7 +1239,6 @@ fun checkCondition(
             Pair(0, 1)   // Right
         )
 
-        // Update neighbors
         for ((dx, dy) in directions) {
             val newX = i + dx
             val newY = j + dy
@@ -1241,7 +1248,6 @@ fun checkCondition(
             }
         }
 
-        // Recursively check neighbors
         for ((dx, dy) in directions) {
             val newX = i + dx
             val newY = j + dy
@@ -1251,11 +1257,9 @@ fun checkCondition(
         }
     }
 
-    //Reset eachPlayerVal
     val newEachPlayerVal = MutableList(eachPlayerVal.value.size) { 0 }
     eachPlayerVal.value = newEachPlayerVal
 
-    // Recalculate eachPlayerVal
     for (p in 0 until numRows) {
         for (q in 0 until numColumnsPerRow) {
             val a = playerGrid.value[p][q]
@@ -1290,24 +1294,6 @@ fun checkCondition(
 
 }
 
-@Composable
-private fun explosionAnimation(): ExitTransition {
-    val explosionAnimation = fadeOut(
-        animationSpec = tween(
-            durationMillis = 500,
-            delayMillis = 100,
-            easing = FastOutSlowInEasing
-        )
-    ) + scaleOut(
-        animationSpec = tween(
-            durationMillis = 500,
-            delayMillis = 100,
-            easing = FastOutSlowInEasing
-        )
-    )
-    return explosionAnimation
-}
-
 @OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun displayContent(
@@ -1323,7 +1309,30 @@ fun displayContent(
     eachPlayerWinningCondition: MutableState<MutableList<Boolean>>
 ) {
 
-    //The following piece of code used for animating was entirely written by ChatGPT 4o
+    val context = LocalContext.current
+    var soundPool by remember{ mutableStateOf<SoundPool?>(null) }
+    var soundId by remember { mutableIntStateOf(0) }
+
+    DisposableEffect(Unit) {
+
+        val audioAttributes = AudioAttributes.Builder()
+            .setUsage(AudioAttributes.USAGE_MEDIA)
+            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+            .build()
+
+        soundPool = SoundPool.Builder()
+            .setMaxStreams(1)
+            .setAudioAttributes(audioAttributes)
+            .build().apply {
+                soundId = load(context, R.raw.wrong_sound, 1)
+            }
+
+        onDispose {
+            soundPool?.release()
+        }
+
+    }
+
     val enterTransition = remember {
         fadeIn(animationSpec = tween(durationMillis = 300)) +
                 scaleIn(initialScale = 0.8f, animationSpec = tween(durationMillis = 300))
@@ -1334,7 +1343,7 @@ fun displayContent(
                 scaleOut(targetScale = 0.8f, animationSpec = tween(durationMillis = 300))
     }
 
-    //The following piece of code used for animating was entirely written by ChatGPT 4o
+    //The following piece of code used for animated content was entirely written by ChatGPT 4o
     AnimatedContent(
         targetState = numberGrid.value[i][j],
         transitionSpec = {
@@ -1348,7 +1357,7 @@ fun displayContent(
         if(targetNum > 0){
             val hearSound = remember { mutableStateOf(false) }
             if (hearSound.value) {
-                soundEffectsForInvalidMove()
+                soundPool?.play(soundId, 1f, 1f, 1, 0, 1f)
             }
 
             Column(
@@ -1977,37 +1986,6 @@ fun soundEffectsForWinning() {
             .setAudioAttributes(audioAttributes)
             .build().apply {
                 soundId = load(context, R.raw.win_sound, 1)
-            }
-
-        onDispose {
-            soundPool?.release()
-        }
-
-    }
-
-    soundPool?.play(soundId, 1f, 1f, 1, 0, 1f)
-
-}
-
-@Composable
-fun soundEffectsForInvalidMove() {
-
-    val context = LocalContext.current
-    var soundPool by remember{ mutableStateOf<SoundPool?>(null) }
-    var soundId by remember { mutableIntStateOf(0) }
-
-    DisposableEffect(Unit) {
-
-        val audioAttributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .build()
-
-        soundPool = SoundPool.Builder()
-            .setMaxStreams(1)
-            .setAudioAttributes(audioAttributes)
-            .build().apply {
-                soundId = load(context, R.raw.wrong_sound, 1)
             }
 
         onDispose {
