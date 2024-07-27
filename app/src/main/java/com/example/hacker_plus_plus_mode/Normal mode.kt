@@ -48,6 +48,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableIntState
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -75,6 +76,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import kotlinx.coroutines.delay
 import kotlin.random.Random
 
 @Composable
@@ -123,16 +125,18 @@ fun secondPage(navController: NavController) {
         }
     }
     Column(modifier = Modifier.padding(0.dp)) {
+        Spacer(modifier = Modifier.padding(top = 20.dp))
         themeSelector()
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.padding(10.dp))
         dropDownForNoOfPlayers()
+        Spacer(modifier = Modifier.padding(20.dp))
         playerDetails()
     }
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
-        Spacer(modifier = Modifier.padding(100.dp))
+        Spacer(modifier = Modifier.padding(170.dp))
         Image(
             painter = painterResource(id = R.drawable.imageinsert),
             contentDescription = "image needed to be inserted there",
@@ -546,7 +550,7 @@ fun thirdPage(navController: NavController) {
         colour = Color.Red
     }
     else if(whoseTurn.value==1) {
-        colour = Color.Blue
+        colour = Color(0,190,255)
     }
     else if(whoseTurn.value==2) {
         colour = Color.Green
@@ -883,7 +887,7 @@ fun thirdPage(navController: NavController) {
                 }
                 Text(text = player.value,
                     textAlign = TextAlign.Center,
-                    color = Color(255,97,85),
+                    color = colour,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .offset((-7).dp, 10.dp)
@@ -907,7 +911,7 @@ fun thirdPage(navController: NavController) {
             ) {
                 Text(text = "${eachPlayerVal.value[whoseTurn.value]}",
                     textAlign = TextAlign.Center,
-                    color = Color(255,97,85),
+                    color = colour,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 8.dp),
@@ -1503,6 +1507,7 @@ fun generateButtonGridForSinglePlayer(
     else {
         shapeOfButton = CircleShape
     }
+    val triggerComputer = remember { mutableStateOf(false) }
     for (i in 0 until numRows) {
         val row = mutableListOf<@Composable () -> Unit>()
         for (j in 0 until numColumnsPerRow) {
@@ -1535,17 +1540,7 @@ fun generateButtonGridForSinglePlayer(
                                 boxesOwnedByRed.value.add(Pair(rowIndex, columnIndex))
                                 isScreenBlue.value = !isScreenBlue.value
 
-                                val randomRow = Random.nextInt(0, numRows)
-                                val randomColumn = Random.nextInt(0, numColumnsPerRow)
-
-                                newNumberGrid[randomRow][randomColumn] += 3
-                                numberGrid.value = newNumberGrid
-
-                                newBooleanGrid[randomRow][randomColumn] = true
-                                booleanGrid.value = newBooleanGrid
-
-                                boxesOwnedByBlue.value.add(Pair(randomRow, randomColumn))
-                                isScreenBlue.value = !isScreenBlue.value
+                                triggerComputer.value = true
                             }
                             count.value++
 
@@ -1554,6 +1549,32 @@ fun generateButtonGridForSinglePlayer(
                         },
                     shape = shapeOfButton
                 ) {
+                    LaunchedEffect(triggerComputer.value) {
+                        if(triggerComputer.value){
+                            delay(4500L)
+
+                            val randomRow = Random.nextInt(0, numRows)
+                            val randomColumn = Random.nextInt(0, numColumnsPerRow)
+
+                            val newNumberGrid = numberGrid.value
+                                .map { it.toMutableList() }
+                                .toMutableList()
+
+                            val newBooleanGrid = booleanGrid.value
+                                .map { it.toMutableList() }
+                                .toMutableList()
+
+                            newNumberGrid[randomRow][randomColumn] += 3
+                            numberGrid.value = newNumberGrid
+
+                            newBooleanGrid[randomRow][randomColumn] = true
+                            booleanGrid.value = newBooleanGrid
+
+                            boxesOwnedByBlue.value.add(Pair(randomRow, randomColumn))
+                            isScreenBlue.value = !isScreenBlue.value
+                        }
+                        triggerComputer.value = false
+                    }
 
                     if (numberGrid.value[i][j] != 0) {
                         displayContentForSinglePlayer(

@@ -634,7 +634,7 @@ fun timedMode(navController: NavController) {
         colour = Color.Red
     }
     else if(whoseTurn.value==1) {
-        colour = Color.Blue
+        colour = Color(0,190,255)
     }
     else if(whoseTurn.value==2) {
         colour = Color.Green
@@ -994,7 +994,7 @@ fun timedMode(navController: NavController) {
                 }
                 Text(text = player.value,
                     textAlign = TextAlign.Center,
-                    color = Color(255,97,85),
+                    color = colour,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .offset((-7).dp, 10.dp)
@@ -1018,7 +1018,7 @@ fun timedMode(navController: NavController) {
             ) {
                 Text(text = "${eachPlayerVal.value[whoseTurn.value]}",
                     textAlign = TextAlign.Center,
-                    color = Color(255,97,85),
+                    color = colour,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .padding(top = 8.dp),

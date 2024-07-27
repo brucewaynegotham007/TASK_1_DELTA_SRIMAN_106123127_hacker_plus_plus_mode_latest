@@ -32,6 +32,7 @@ import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -69,6 +70,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Surface
@@ -2007,7 +2009,7 @@ fun playerDetails() {
         colour = Color.Red
     }
     else if(num.value==1) {
-        colour = Color.Blue
+        colour = Color(0,190,255)
     }
     else if(num.value==2) {
         colour = Color.Green
@@ -2363,7 +2365,7 @@ fun playerDetails() {
                 }
             }
         }
-        Spacer(modifier = Modifier.padding(top = 20.dp))
+        Spacer(modifier = Modifier.padding(top = 30.dp))
         if(num.value < noOfPlayers.value-1){
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -2373,7 +2375,16 @@ fun playerDetails() {
                     onClick = {
                         num.value++
                     },
-                    modifier = Modifier.size(150.dp, 50.dp)
+                    modifier = Modifier
+                        .size(150.dp, 50.dp)
+                        .border(
+                            width = 4.dp,
+                            color = Color.Black
+                    ),
+                    shape = RectangleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(255,95,87)
+                    )
                 ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
@@ -2382,7 +2393,8 @@ fun playerDetails() {
                     ) {
                         Text(
                             text = "Next",
-                            fontSize = 22.sp
+                            fontSize = 22.sp,
+                            color = Color.Black
                         )
                     }
                 }
