@@ -1715,6 +1715,13 @@ fun result(navController: NavController,
                     Spacer(modifier = Modifier.padding(top = 0.dp))
                     Button(
                         onClick = {
+                            winningValue.value = 0
+                            winner.value = "n"
+                            for(i in 0..<eachPlayerWinningCondition.value.size) {
+                                eachPlayerLosingCondition.value[i] = false
+                                eachPlayerWinningCondition.value[i] = false
+                                eachPlayerVal.value[i] = 0
+                            }
                             thisPlayerWonTheMatch.value = false
                             if(modeSelector.value=="Normal") {
                                 navController.navigate("secondscreen")
@@ -1736,6 +1743,13 @@ fun result(navController: NavController,
                     Spacer(modifier = Modifier.padding(top = 15.dp))
                     Button(
                         onClick = {
+                            winningValue.value = 0
+                            winner.value = "n"
+                            for(i in 0..<eachPlayerWinningCondition.value.size) {
+                                eachPlayerLosingCondition.value[i] = false
+                                eachPlayerWinningCondition.value[i] = false
+                                eachPlayerVal.value[i] = 0
+                            }
                             thisPlayerWonTheMatch.value = false
                             navController.navigate("firstscreen")
                             firstBoxVal.value = "PLAYER 1"

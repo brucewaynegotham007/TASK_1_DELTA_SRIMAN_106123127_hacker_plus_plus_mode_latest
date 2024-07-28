@@ -1540,7 +1540,17 @@ fun generateButtonGridForSinglePlayer(
                                 boxesOwnedByRed.value.add(Pair(rowIndex, columnIndex))
                                 isScreenBlue.value = !isScreenBlue.value
 
-                                triggerComputer.value = true
+                                val randomRow = Random.nextInt(0, numRows)
+                                val randomColumn = Random.nextInt(0, numColumnsPerRow)
+
+                                newNumberGrid[randomRow][randomColumn] += 3
+                                numberGrid.value = newNumberGrid
+
+                                newBooleanGrid[randomRow][randomColumn] = true
+                                booleanGrid.value = newBooleanGrid
+
+                                boxesOwnedByBlue.value.add(Pair(randomRow, randomColumn))
+                                isScreenBlue.value = !isScreenBlue.value
                             }
                             count.value++
 
@@ -1549,33 +1559,6 @@ fun generateButtonGridForSinglePlayer(
                         },
                     shape = shapeOfButton
                 ) {
-                    LaunchedEffect(triggerComputer.value) {
-                        if(triggerComputer.value){
-                            delay(4500L)
-
-                            val randomRow = Random.nextInt(0, numRows)
-                            val randomColumn = Random.nextInt(0, numColumnsPerRow)
-
-                            val newNumberGrid = numberGrid.value
-                                .map { it.toMutableList() }
-                                .toMutableList()
-
-                            val newBooleanGrid = booleanGrid.value
-                                .map { it.toMutableList() }
-                                .toMutableList()
-
-                            newNumberGrid[randomRow][randomColumn] += 3
-                            numberGrid.value = newNumberGrid
-
-                            newBooleanGrid[randomRow][randomColumn] = true
-                            booleanGrid.value = newBooleanGrid
-
-                            boxesOwnedByBlue.value.add(Pair(randomRow, randomColumn))
-                            isScreenBlue.value = !isScreenBlue.value
-                        }
-                        triggerComputer.value = false
-                    }
-
                     if (numberGrid.value[i][j] != 0) {
                         displayContentForSinglePlayer(
                             i = i,
@@ -1591,7 +1574,6 @@ fun generateButtonGridForSinglePlayer(
                             redWinningCondition = redWinningCondition
                         )
                     }
-
                 }
             }
             row.add(buttonContent)
@@ -1940,7 +1922,15 @@ fun eachGameForSinglePlayer(navController: NavController,
                     Button(
                         onClick = {
                             val oneMoreThanHalf = (numberOfGames.value) / 2 + 1
-                            navController.navigate("thirdscreen")
+                            winningValue.value = 0
+                            winner.value = "n"
+                            blueVal.value = 0
+                            redVal.value = 0
+                            boxesOwnedByRed.value.clear()
+                            boxesOwnedByBlue.value.clear()
+                            hasRedWonTheMatch.value = false
+                            hasBlueWonTheMatch.value = false
+                            navController.navigate("singlePlayerMode")
                             if (blueWinningCondition.value) {
                                 blueWinningCount.value++
                                 playerLost.value = false
@@ -2064,7 +2054,16 @@ fun resultForSinglePlayer(navController: NavController,
                     Spacer(modifier = Modifier.padding(top = 0.dp))
                     Button(
                         onClick = {
-                            winningCondition.value = false
+                            winningValue.value = 0
+                            winner.value = "n"
+                            blueVal.value = 0
+                            redVal.value = 0
+                            hasRedWonTheMatch.value = false
+                            hasBlueWonTheMatch.value = false
+                            blueWinningCount.value = 0
+                            redWinningCount.value = 0
+                            boxesOwnedByRed.value.clear()
+                            boxesOwnedByBlue.value.clear()
                             navController.navigate("secondscreen")
                             firstBoxVal.value = "PLAYER 1"
                             secondBoxVal.value = "PLAYER 2"
@@ -2080,7 +2079,16 @@ fun resultForSinglePlayer(navController: NavController,
                     Spacer(modifier = Modifier.padding(top = 15.dp))
                     Button(
                         onClick = {
-                            winningCondition.value = false
+                            winningValue.value = 0
+                            winner.value = "n"
+                            blueVal.value = 0
+                            redVal.value = 0
+                            hasRedWonTheMatch.value = false
+                            hasBlueWonTheMatch.value = false
+                            blueWinningCount.value = 0
+                            redWinningCount.value = 0
+                            boxesOwnedByRed.value.clear()
+                            boxesOwnedByBlue.value.clear()
                             navController.navigate("firstscreen")
                             firstBoxVal.value = "PLAYER 1"
                             secondBoxVal.value = "PLAYER 2"
