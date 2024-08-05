@@ -1327,24 +1327,22 @@ fun displayContentForSinglePlayer(i:Int ,
     var soundPool by remember{ mutableStateOf<SoundPool?>(null) }
     var soundId by remember { mutableIntStateOf(0) }
 
+    val audioAttributes = AudioAttributes.Builder()
+        .setUsage(AudioAttributes.USAGE_MEDIA)
+        .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+        .build()
+
+    soundPool = SoundPool.Builder()
+        .setMaxStreams(1)
+        .setAudioAttributes(audioAttributes)
+        .build().apply {
+            soundId = load(context, R.raw.wrong_sound, 1)
+        }
+
     DisposableEffect(Unit) {
-
-        val audioAttributes = AudioAttributes.Builder()
-            .setUsage(AudioAttributes.USAGE_MEDIA)
-            .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-            .build()
-
-        soundPool = SoundPool.Builder()
-            .setMaxStreams(1)
-            .setAudioAttributes(audioAttributes)
-            .build().apply {
-                soundId = load(context, R.raw.wrong_sound, 1)
-            }
-
         onDispose {
             soundPool?.release()
         }
-
     }
 
     val hearSound = remember { mutableStateOf(false) }

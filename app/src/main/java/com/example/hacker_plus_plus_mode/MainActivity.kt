@@ -769,7 +769,22 @@ fun firstPlayerIconSecondPage() {
         Button(onClick = { /*TODO*/ },
             colors = ButtonDefaults.buttonColors(containerColor = Color(255,0,0)),
             modifier = Modifier
-                .padding(top = 55.dp)
+                .background(Color.Black)
+                .padding(55.dp)
+                .background(Color.White)
+                .padding(55.dp)
+                .background(Color.Black)
+                .padding(55.dp)
+                .background(Color.White)
+                .padding(55.dp)
+                .background(Color.Black)
+                .padding(55.dp)
+                .background(Color.White)
+                .padding(55.dp)
+                .background(Color.Black)
+                .padding(55.dp)
+                .background(Color.White)
+                .padding(55.dp)
                 .size(200.dp, 50.dp)
         ) {
             Text(text = "PLAYER 1",
