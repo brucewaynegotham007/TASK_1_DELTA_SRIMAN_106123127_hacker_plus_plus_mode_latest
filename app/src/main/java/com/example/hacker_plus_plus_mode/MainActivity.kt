@@ -289,7 +289,7 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold
         )
-        Spacer(modifier = Modifier.padding(start = 15.dp))
+        Spacer(modifier = Modifier.padding(start = 25.dp))
         Column(
             modifier = Modifier,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -311,7 +311,10 @@ fun ContentOnTopOfImage(modifier: Modifier = Modifier , navController: NavContro
             .height(10.dp),
         verticalArrangement = Arrangement.Bottom
     ) {
-        Row(horizontalArrangement = Arrangement.SpaceBetween) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
             Icon(
                 Icons.Default.Menu,
                 contentDescription = "Show persistant display",
@@ -1198,6 +1201,7 @@ val shape : MutableState<String> = mutableStateOf("Normal")
 @Composable
 fun rulesPage(navController: NavController , showDialog : MutableState<Boolean>) {
     if(showDialog.value){
+        val verticalScrollState = rememberScrollState()
         AlertDialog(
             onDismissRequest = {
                 showDialog.value = false
@@ -1210,21 +1214,22 @@ fun rulesPage(navController: NavController , showDialog : MutableState<Boolean>)
             text = {
                 Column(
                     modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                        .size(350.dp, 500.dp)
+                        .verticalScroll(verticalScrollState)
+                        .size(380.dp, 1050.dp)
                 ) {
                     Text("1st Turn of each player:", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Text("Players can choose any tile on the grid on this turn only. Clicking a tile assigns your colour to it and awards you 3 points on that tile.\n", fontSize = 20.sp)
                     Text("Subsequent Turns:", fontSize = 20.sp, fontWeight = FontWeight.Bold)
                     Text("After the first turn, players can only click on tiles that already have their own colour. Clicking a tile with your colour adds 1 point to that tile.The background colour indicates the next player.\n", fontSize = 20.sp)
                     Text("Conquest and Expansion:", fontSize = 20.sp, fontWeight = FontWeight.Bold)
-                    Text("When a tile with your colour reaches 4 points, it triggers an expansion:\n" +
-                            "The colour completely disappears from the original tile.\n" +
-                            "Your colour spreads to the four surrounding squares in a plus shape (up, down, left, right).\n" +
-                            "Each of the four surrounding squares gains 1 point with your colour.\n" +
+                    Text("When a tile with your colour reaches 4 points, it triggers an expansion.\n\n" +
+                            "The colour completely disappears from the original tile." +
+                            "Your colour spreads to the four surrounding squares in a plus shape (up, down, left, right).\n\n" +
+                            "Each of the four surrounding squares gains 1 point with your colour.\n\n" +
                             "If any of the four has your opponent’s colour, you conquer the opponent's points on that tile while adding a point to it, completely erasing theirs.\n" +
-                            "The expansion is retriggered if the neighbouring tile as well reaches 4 points this way.\n" +
+                            "The expansion is retriggered if the neighbouring tile as well reaches 4 points this way.\n\n" +
                             "Players take turns clicking on tiles and the objective is to eliminate your opponent's colour entirely from the screen.", fontSize = 20.sp)
+//                    Text("\n\n\n\n\n\n\n\n\n\n\n")
                 }
             }
         )
